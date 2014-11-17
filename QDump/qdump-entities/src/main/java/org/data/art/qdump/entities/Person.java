@@ -8,13 +8,29 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table(name="PERSONS")
 @AttributeOverride(name="id", column=@Column(
 		name="person_id", insertable=false, updatable=false))
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+@NamedQueries({@NamedQuery(name="getPersons", query="from Person"), 
+	@NamedQuery(name="deletePersons", query="delete Person"),
+	@NamedQuery(name="deletePerson", query="delete Person where person_id = :id"),
+	@NamedQuery(name="getPersonsByGroup", query="from Person "
+			+ "where group = :group")})
 public class Person extends BaseEntity{
+		public final static String GET_PERSONS = "getPersons";
+		public final static String DELETE_PERSONS = "deletePersons";
+		public final static String DELETE_PERSON = "deletePerson";
+		public final static String GET_PERSONS_BY_GROUP ="getPersonsByGroup";
+	
 		private String name;
 		private String surname;
 		private String email;
