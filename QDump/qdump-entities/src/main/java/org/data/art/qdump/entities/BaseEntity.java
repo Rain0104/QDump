@@ -10,8 +10,8 @@ import javax.persistence.OneToOne;
 public class BaseEntity {
 	
 	protected int id;
-	private Person createdBy;
-	private Person modifiedBy;
+	private PersonEntity createdBy;
+	private PersonEntity modifiedBy;
 	private Date createdAt;
 	private Date modifiedAt;
 	
@@ -25,21 +25,21 @@ public class BaseEntity {
 	
 	@OneToOne
 	@JoinColumn(name="created_by", referencedColumnName="user_id")
-	public Person getCreatedBy() {
+	public PersonEntity getCreatedBy() {
 		return createdBy;
 	}
 	
-	public void setCreatedBy(Person createdBy) {
+	public void setCreatedBy(PersonEntity createdBy) {
 		this.createdBy = createdBy;
 	}
 	
 	@OneToOne
 	@JoinColumn(name="modified_by", referencedColumnName="user_id")
-	public Person getModifiedBy() {
+	public PersonEntity getModifiedBy() {
 		return modifiedBy;
 	}
 	
-	public void setModifiedBy(Person modifiedBy) {
+	public void setModifiedBy(PersonEntity modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 	

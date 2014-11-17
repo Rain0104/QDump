@@ -2,8 +2,8 @@ package org.data.art.qdump.service.impl;
 
 import java.util.List;
 
-import org.data.art.qdump.entities.Person;
-import org.data.art.qdump.entities.PersonGroup;
+import org.data.art.qdump.entities.PersonEntity;
+import org.data.art.qdump.enums.PersonGroupEnums;
 import org.data.art.qdump.persistence.PersonRepository;
 import org.data.art.qdump.service.QDumpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,22 +13,22 @@ public class QDumpServiceImpl implements QDumpService{
 	private PersonRepository personRepository;
 	
 	@Override
-	public void addPerson(Person person) {
+	public void addPerson(PersonEntity person) {
 		personRepository.addPerson(person);
 	}
 
 	@Override
-	public Person getPerson(int id) {
+	public PersonEntity getPerson(int id) {
 		return personRepository.getPerson(id);
 	}
 
 	@Override
-	public List<Person> getPersons() {
+	public List<PersonEntity> getPersons() {
 		return personRepository.getPersons();
 	}
 
 	@Override
-	public <T> List<T> getPersonsByGroup(Class<T> choice, PersonGroup group) {
+	public <T> List<T> getPersonsByGroup(Class<T> choice, PersonGroupEnums group) {
 		return personRepository.getPersonsByGroup(choice, group);
 	}
 

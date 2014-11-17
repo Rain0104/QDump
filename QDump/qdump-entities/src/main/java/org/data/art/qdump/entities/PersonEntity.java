@@ -12,6 +12,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.data.art.qdump.enums.PersonGroupEnums;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -25,7 +26,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 	@NamedQuery(name="deletePerson", query="delete Person where person_id = :id"),
 	@NamedQuery(name="getPersonsByGroup", query="from Person "
 			+ "where group = :group")})
-public class Person extends BaseEntity{
+public class PersonEntity extends BaseEntity{
 		public final static String GET_PERSONS = "getPersons";
 		public final static String DELETE_PERSONS = "deletePersons";
 		public final static String DELETE_PERSON = "deletePerson";
@@ -36,13 +37,13 @@ public class Person extends BaseEntity{
 		private String email;
 		private String login;
 		private String pass;
-		private PersonGroup group;
+		private PersonGroupEnums group;
 		
-		public Person() {
+		public PersonEntity() {
 			super();
 		}
 		
-		public Person(String email, String pass){
+		public PersonEntity(String email, String pass){
 			super();
 			this.email = email;
 			this.pass = pass;
@@ -107,11 +108,11 @@ public class Person extends BaseEntity{
 		
 		@Column(name="group")
 		@Enumerated(EnumType.STRING)
-		public PersonGroup getCategory() {
+		public PersonGroupEnums getCategory() {
 			return group;
 		}
 		
-		public void setPersonGroup(PersonGroup group) {
+		public void setPersonGroup(PersonGroupEnums group) {
 			this.group = group;
 		}
 

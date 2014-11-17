@@ -1,4 +1,4 @@
-package org.data.art.qdump.persistence;
+package org.data.art.qdump.config;
 
 import java.util.Properties;
 

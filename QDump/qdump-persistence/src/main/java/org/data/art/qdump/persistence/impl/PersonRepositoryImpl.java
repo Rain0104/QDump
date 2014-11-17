@@ -1,4 +1,4 @@
-package org.data.art.qdump.persistence.repository;
+package org.data.art.qdump.persistence.impl;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import org.data.art.qdump.entities.Person;
-import org.data.art.qdump.entities.PersonGroup;
+import org.data.art.qdump.entities.PersonEntity;
+import org.data.art.qdump.enums.PersonGroupEnums;
 import org.data.art.qdump.persistence.PersonRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,41 +20,41 @@ public class PersonRepositoryImpl implements PersonRepository {
 	private EntityManager em;
 	
 	@Override
-	public void addPerson(Person person) {
+	public void addPerson(PersonEntity person) {
 		em.persist(person);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public Person getPerson(int id) {
-		return em.find(Person.class, id);
+	public PersonEntity getPerson(int id) {
+		return em.find(PersonEntity.class, id);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<Person> getPersons() {
-		return em.createNamedQuery(Person.GET_PERSONS, 
-				Person.class).getResultList();
+	public List<PersonEntity> getPersons() {
+		return em.createNamedQuery(PersonEntity.GET_PERSONS, 
+				PersonEntity.class).getResultList();
 	}
 
 	@Override
 	public <T> List<T> getPersonsByGroup(Class<T> choice, 
-			PersonGroup group) {
+			PersonGroupEnums group) {
 		TypedQuery<T> query = em.createNamedQuery(
-				Person.GET_PERSONS_BY_GROUP, choice);
+				PersonEntity.GET_PERSONS_BY_GROUP, choice);
 		query.setParameter("category", group.name());
 		return query.getResultList();
 	}
 
 	@Override
 	public void deletePerson(int id) {
-		Query query = em.createNamedQuery(Person.DELETE_PERSON);
+		Query query = em.createNamedQuery(PersonEntity.DELETE_PERSON);
 		query.setParameter("id", id);
 	}
 
 	@Override
 	public void deletePersons() {
-		em.createNamedQuery(Person.DELETE_PERSONS);
+		em.createNamedQuery(PersonEntity.DELETE_PERSONS);
 	}
 
 }
