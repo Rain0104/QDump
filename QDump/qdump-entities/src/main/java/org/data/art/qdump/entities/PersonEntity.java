@@ -21,10 +21,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @AttributeOverride(name="id", column=@Column(
 		name="person_id", insertable=false, updatable=false))
 @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-@NamedQueries({@NamedQuery(name="getPersons", query="from Person"), 
-	@NamedQuery(name="deletePersons", query="delete Person"),
-	@NamedQuery(name="deletePerson", query="delete Person where person_id = :id"),
-	@NamedQuery(name="getPersonsByGroup", query="from Person "
+@NamedQueries({@NamedQuery(name="getPersons", query="from PersonEntity"), 
+	@NamedQuery(name="deletePersons", query="delete PersonEntity"),
+	@NamedQuery(name="deletePerson", query="delete PersonEntity where person_id = :id"),
+	@NamedQuery(name="getPersonsByGroup", query="from PersonEntity "
 			+ "where group = :group")})
 public class PersonEntity extends BaseEntity{
 		public final static String GET_PERSONS = "getPersons";
