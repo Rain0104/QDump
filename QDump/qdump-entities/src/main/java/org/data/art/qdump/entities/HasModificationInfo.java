@@ -7,24 +7,29 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 
 @MappedSuperclass
-public class BaseEntity {
+public class HasModificationInfo {
 	
 	protected int id;
 	private PersonEntity createdBy;
 	private PersonEntity modifiedBy;
-	private Date createdAt;
-	private Date modifiedAt;
+	private Date createdDate;
+	//private Date createdAt;
+	//private Date modifiedAt;
+	
+	public HasModificationInfo() {
+		super();
+	}
 	
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
 	
 	@OneToOne
-	@JoinColumn(name="created_by", referencedColumnName="user_id")
+	@JoinColumn(name="created_by", referencedColumnName="person_id")
 	public PersonEntity getCreatedBy() {
 		return createdBy;
 	}
@@ -34,7 +39,7 @@ public class BaseEntity {
 	}
 	
 	@OneToOne
-	@JoinColumn(name="modified_by", referencedColumnName="user_id")
+	@JoinColumn(name="modified_by", referencedColumnName="person_id")
 	public PersonEntity getModifiedBy() {
 		return modifiedBy;
 	}
@@ -43,6 +48,16 @@ public class BaseEntity {
 		this.modifiedBy = modifiedBy;
 	}
 	
+	@Column(name="created_date")
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	/*	
 	@Column(name="created_at", nullable=false)
 	public Date getCreatedAt() {
 		return createdAt;
@@ -60,5 +75,5 @@ public class BaseEntity {
 	public void setModifiedAt(Date modifiedAt) {
 		this.modifiedAt = modifiedAt;
 	}
-
+	*/
 }

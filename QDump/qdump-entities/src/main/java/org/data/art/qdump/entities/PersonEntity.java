@@ -12,32 +12,36 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import org.data.art.qdump.enums.PersonGroupEnums;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.data.art.qdump.enums.PersonRoleEnums;
 
 @Entity
 @Table(name="PERSONS")
 @AttributeOverride(name="id", column=@Column(
 		name="person_id", insertable=false, updatable=false))
-@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-@NamedQueries({@NamedQuery(name="getPersons", query="from PersonEntity"), 
-	@NamedQuery(name="deletePersons", query="delete PersonEntity"),
-	@NamedQuery(name="deletePerson", query="delete PersonEntity where person_id = :id"),
-	@NamedQuery(name="getPersonsByGroup", query="from PersonEntity "
-			+ "where group = :group")})
-public class PersonEntity extends BaseEntity{
-		public final static String GET_PERSONS = "getPersons";
-		public final static String DELETE_PERSONS = "deletePersons";
-		public final static String DELETE_PERSON = "deletePerson";
-		public final static String GET_PERSONS_BY_GROUP ="getPersonsByGroup";
+/*
+@NamedQueries({
+	@NamedQuery(name = "Person.deleteByEmail", query = "DELETE FROM Person p "
+			+ "WHERE p.email = ?1"),
+	@NamedQuery(name = "Person.deleteByLogin", query = "DELETE FROM Person p "
+			+ "WHERE p.login = ?1"),
+	@NamedQuery(name = "Person.deleteByRole", query = "DELETE FROM Person p "
+			+ "WHERE p.role = ?1"),
+	@NamedQuery(name = "Person.findByEmail", query = "FROM Person p "
+			+ "WHERE p.email = ?1"),
+	@NamedQuery(name = "Person.findByLogin", query = "FROM Person p "
+			+ "WHERE p.login = ?1"),
+	@NamedQuery(name = "Person.findByRole", query = "FROM Person p "
+			+ "WHERE p.role = ?1") 
+})
+*/
+public class PersonEntity extends HasModificationInfo{
 	
-		private String name;
-		private String surname;
+		private String firstname;
+		private String lastname;
 		private String email;
 		private String login;
 		private String pass;
-		private PersonGroupEnums group;
+		private PersonRoleEnums role;
 		
 		public PersonEntity() {
 			super();
@@ -61,25 +65,25 @@ public class PersonEntity extends BaseEntity{
 			this.id = id;
 		}
 		
-		@Column(name="name",length=32)
-		public String getName() {
-			return name;
+		@Column(name="firstname",length=45)
+		public String getFirstname() {
+			return firstname;
 		}
 
-		public void setName(String name) {
-			this.name = name;
+		public void setFirstname(String firstname) {
+			this.firstname = firstname;
 		}
 		
-		@Column(name="surname",length=32)
-		public String getSurname() {
-			return surname;
+		@Column(name="lastname",length=45)
+		public String getLastname() {
+			return lastname;
 		}
 
-		public void setSurname(String surname) {
-			this.surname = surname;
+		public void setLastname(String lastname) {
+			this.lastname = lastname;
 		}
 
-		@Column(name="email",length=20,nullable=false,unique=true)
+		@Column(name="email",length=45,nullable=false,unique=true)
 		public String getEmail() {
 			return email;
 		}
@@ -88,7 +92,7 @@ public class PersonEntity extends BaseEntity{
 			this.email = email;
 		}
 
-		@Column(name="login",length=15,nullable=false,unique=true)
+		@Column(name="login",length=45,nullable=false,unique=true)
 		public String getLogin() {
 			return login;
 		}
@@ -97,7 +101,7 @@ public class PersonEntity extends BaseEntity{
 			this.login = login;
 		}
 
-		@Column(name="pass",length=15,nullable=false)
+		@Column(name="password",length=45,nullable=false)
 		public String getPass() {
 			return pass;
 		}
@@ -106,14 +110,14 @@ public class PersonEntity extends BaseEntity{
 			this.pass = pass;
 		}
 		
-		@Column(name="group")
+		@Column(name="role",length=45)
 		@Enumerated(EnumType.STRING)
-		public PersonGroupEnums getCategory() {
-			return group;
+		public PersonRoleEnums getPersonRoleEnums() {
+			return role;
 		}
 		
-		public void setPersonGroup(PersonGroupEnums group) {
-			this.group = group;
+		public void setPersonRoleEnums(PersonRoleEnums role) {
+			this.role = role;
 		}
 
 }

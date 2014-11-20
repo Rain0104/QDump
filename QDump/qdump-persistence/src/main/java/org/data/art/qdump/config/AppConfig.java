@@ -6,12 +6,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -23,6 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
+@EnableJpaRepositories(entityManagerFactoryRef="entityManagerFactory")
 @ComponentScan("org.data.art")
 public class AppConfig {
 	@Autowired
@@ -33,9 +38,8 @@ public class AppConfig {
 	
 	@Bean
 	public PlatformTransactionManager transactionManager(
-			EntityManagerFactory emf) {
-		return new JpaTransactionManager(
-				emf);
+			SessionFactory sessionFactory) {
+		return new HibernateTransactionManager(sessionFactory);
 	}
 	
 	@Bean
@@ -50,12 +54,36 @@ public class AppConfig {
 	}
 	
 	@Bean
+	public LocalSessionFactoryBean sessionFactory() {
+		LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
+		bean.setPackagesToScan("org.data.art");
+		bean.setDataSource(dataSource);
+		Properties properties = new Properties();
+		properties.put("hibernate.dialect", 
+				env.getProperty("hibernate.dialect"));
+		properties.put("hibernate.hbm2ddl.auto", 
+				env.getProperty("hbm2ddl.auto"));
+		properties.put("hibernate.show_sql", 
+				env.getProperty("show_sql"));
+		bean.setHibernateProperties(properties);
+	//	bean.setEntityInterceptor(new GlobalInterceptor());
+		return bean;
+	}
+	
+	@Bean
+	public PlatformTransactionManager transactionManagerJpa(
+			EntityManagerFactory emf) {
+		return new JpaTransactionManager(emf);
+	}
+	
+	@Bean
 	public LocalContainerEntityManagerFactoryBean 
 		entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean bean = new 
 				LocalContainerEntityManagerFactoryBean();
-		bean.setPackagesToScan("org.hillel.it");
+		bean.setPackagesToScan("org.data.art");
 		bean.setDataSource(dataSource);
+		
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", 
 				env.getProperty("hibernate.dialect"));
