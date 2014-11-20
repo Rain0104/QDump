@@ -7,6 +7,7 @@ import org.data.art.qdump.enums.PersonRoleEnums;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PersonCrudRepository extends CrudRepository<PersonEntity, Integer> {
 	/*
 	public void deleteByEmail(String email);
