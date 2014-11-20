@@ -2,29 +2,43 @@ package org.data.art.qdump.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.data.art.qdump.entities.PersonEntity;
 import org.data.art.qdump.enums.PersonRoleEnums;
-import org.data.art.qdump.persistence.PersonCrudRepistory;
+import org.data.art.qdump.persistence.PersonCrudRepository;
 import org.data.art.qdump.service.QDumpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class QDumpServiceImpl implements QDumpService{
 	@Autowired
-	private PersonCrudRepistory personCrudRepistory;
+	private PersonCrudRepository personCrudRepository;
 
 	@Override
 	public void addPerson(PersonEntity person) {
-		personCrudRepistory.save(person);	
+		personCrudRepository.save(person);	
 	}
 
 	@Override
 	public PersonEntity getPerson(int id) {
-		return personCrudRepistory.findOne(id);
+		return personCrudRepository.findOne(id);
 	}
 
 	@Override
 	public List<PersonEntity> getPersons() {
-		return (List<PersonEntity>) personCrudRepistory.findAll();
+		return (List<PersonEntity>) personCrudRepository.findAll();
+	}
+
+	@Override
+	public void deletePerson(int id) {
+		personCrudRepository.delete(id);
+	}
+
+	@Override
+	public void deletePersons() {
+		personCrudRepository.deleteAll();		
 	}
 
 	@Override
@@ -46,16 +60,6 @@ public class QDumpServiceImpl implements QDumpService{
 	}
 
 	@Override
-	public void deletePerson(int id) {
-		personCrudRepistory.delete(id);
-	}
-
-	@Override
-	public void deletePersons() {
-		personCrudRepistory.deleteAll();		
-	}
-
-	@Override
 	public void deletePersonByEmail(String email) {
 		// TODO Auto-generated method stub
 		
@@ -72,6 +76,5 @@ public class QDumpServiceImpl implements QDumpService{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
+
 }
