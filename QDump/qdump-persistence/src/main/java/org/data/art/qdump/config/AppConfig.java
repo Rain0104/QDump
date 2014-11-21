@@ -87,8 +87,8 @@ public class AppConfig {
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", 
 						env.getProperty("hibernate.dialect"));
-		properties.put("hibernate.cache.use_second_level_cache", 
-						env.getProperty("second.level.cache"));
+		//properties.put("hibernate.cache.use_second_level_cache", 
+		//				env.getProperty("second.level.cache"));
 		properties.put("hibernate.cache.provider_class", 
 						env.getProperty("cache.provider.class"));
 		properties.put("hibernate.hbm2ddl.auto", 
