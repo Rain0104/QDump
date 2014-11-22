@@ -1,13 +1,16 @@
 package org.data.art.qdump.entities;
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 
 @MappedSuperclass
-public class HasModificationInfo {
+@Embeddable
+public class HasModificationInfo implements Serializable {
 	
 	protected int id;
 	private PersonEntity createdBy;
