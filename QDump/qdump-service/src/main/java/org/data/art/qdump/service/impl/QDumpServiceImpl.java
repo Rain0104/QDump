@@ -30,54 +30,47 @@ public class QDumpServiceImpl implements QDumpService{
 
 	@Override
 	public List<PersonEntity> getPersons() {
-		return null;
-				//(List<PersonEntity>) personCrudRepository.findAll();
+		return personDAO.getPersons();
 	}
 
 	@Override
 	public void deletePerson(int id) {
-		//personCrudRepository.delete(id);
+		personDAO.deletePerson(id);
 	}
 
 	@Override
 	public void deletePersons() {
-		//personCrudRepository.deleteAll();		
+		personDAO.deletePersons();		
 	}
 
 	@Override
 	public List<PersonEntity> getPersonByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		return personDAO.getPersonByEmail(email);
 	}
 
 	@Override
 	public List<PersonEntity> getPersonByLogin(String login) {
-		// TODO Auto-generated method stub
-		return null;
+		return personDAO.getPersonByLogin(login);
 	}
 
 	@Override
 	public List<PersonEntity> getPersonByRole(PersonRoleEnums role) {
-		// TODO Auto-generated method stub
-		return null;
+		return personDAO.getPersonByRole(role);
 	}
 
 	@Override
 	public void deletePersonByEmail(String email) {
-		// TODO Auto-generated method stub
-		
+		personDAO.deletePersonByEmail(email);
 	}
 
 	@Override
 	public void deletePersonByLogin(String login) {
-		// TODO Auto-generated method stub
-		
+		personDAO.deletePersonByLogin(login);
 	}
 
 	@Override
 	public void deletePersonByRole(PersonRoleEnums role) {
-		// TODO Auto-generated method stub
-		
+		personDAO.deletePersonByRole(role);
 	}
 
 }
