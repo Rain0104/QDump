@@ -24,23 +24,33 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @AttributeOverride(name="id", column=@Column(
 		name="person_id", insertable=false, updatable=false))
 @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-/*
-@NamedQueries({
-	@NamedQuery(name = "Person.deleteByEmail", query = "DELETE FROM Person p "
-			+ "WHERE p.email = ?1"),
-	@NamedQuery(name = "Person.deleteByLogin", query = "DELETE FROM Person p "
-			+ "WHERE p.login = ?1"),
-	@NamedQuery(name = "Person.deleteByRole", query = "DELETE FROM Person p "
-			+ "WHERE p.role = ?1"),
-	@NamedQuery(name = "Person.findByEmail", query = "FROM Person p "
-			+ "WHERE p.email = ?1"),
-	@NamedQuery(name = "Person.findByLogin", query = "FROM Person p "
-			+ "WHERE p.login = ?1"),
-	@NamedQuery(name = "Person.findByRole", query = "FROM Person p "
-			+ "WHERE p.role = ?1") 
+@NamedQueries({@NamedQuery(name="getPersons", query="from PersonEntity"), 
+	@NamedQuery(name="getPersonsByEmail", query="from PersonEntity where "
+			+ "email =:email"),
+	@NamedQuery(name="getPersonsByLogin", query="from PersonEntity where "
+			+ "login =:login"),
+	@NamedQuery(name="getPersonsByRole", query="from PersonEntity where "
+		 	+ "role = :role"),
+	@NamedQuery(name="deletePersons", query="delete PersonEntity"),
+	@NamedQuery(name="deletePerson", query="delete PersonEntity where "
+			+ "person_id = :id"),
+	@NamedQuery(name="deletePersonByEmail", query="delete PersonEntity where "
+			+ "email =:email"),
+	@NamedQuery(name="deletePersonByLogin", query="delete PersonEntity where "
+			+ "login =:login"),
+	@NamedQuery(name="deletePersonsByRole", query="delete PersonEntity where "
+			+ "role = :role")
 })
-*/
 public class PersonEntity extends HasModificationInfo{
+	public final static String GET_PERSONS = "getPersons";
+	public final static String GET_PERSONS_BY_EMAIL = "getPersonsByEmail";
+	public final static String GET_PERSONS_BY_LOGIN = "getPersonsByLogin";
+	public final static String GET_PERSONS_BY_ROLE = "getPersonsByRole";
+	public final static String DELETE_PERSONS = "deletePersons";
+	public final static String DELETE_PERSON = "deletePerson";
+	public final static String DELETE_PERSON_BY_EMAIL = "getPersonsByEmail";
+	public final static String DELETE_PERSON_BY_LOGIN = "getPersonsByLogin";
+	public final static String DELETE_PERSONS_BY_ROLE = "getPersonsByRole";
 	
 		private String firstname;
 		private String lastname;
