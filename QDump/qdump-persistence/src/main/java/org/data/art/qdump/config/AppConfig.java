@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef="entityManagerFactory")
 @ComponentScan("org.data.art")
 public class AppConfig {
 	@Autowired
@@ -38,8 +37,9 @@ public class AppConfig {
 	
 	@Bean
 	public PlatformTransactionManager transactionManager(
-			SessionFactory sessionFactory) {
-		return new HibernateTransactionManager(sessionFactory);
+			EntityManagerFactory emf) {
+		return new JpaTransactionManager(
+				emf);
 	}
 	
 	@Bean
@@ -54,53 +54,33 @@ public class AppConfig {
 	}
 	
 	@Bean
-	public LocalSessionFactoryBean sessionFactory() {
-		LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
-		bean.setPackagesToScan("org.data.art");
-		bean.setDataSource(dataSource);
-		Properties properties = new Properties();
-		properties.put("hibernate.dialect", 
-				env.getProperty("hibernate.dialect"));
-		properties.put("hibernate.hbm2ddl.auto", 
-				env.getProperty("hbm2ddl.auto"));
-		properties.put("hibernate.show_sql", 
-				env.getProperty("show_sql"));
-		bean.setHibernateProperties(properties);
-	//	bean.setEntityInterceptor(new GlobalInterceptor());
-		return bean;
-	}
-	
-	@Bean
-	public PlatformTransactionManager transactionManagerJpa(
-			EntityManagerFactory emf) {
-		return new JpaTransactionManager(emf);
-	}
-	
-	@Bean
 	public LocalContainerEntityManagerFactoryBean 
 		entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean bean = new 
 				LocalContainerEntityManagerFactoryBean();
 		bean.setPackagesToScan("org.data.art");
 		bean.setDataSource(dataSource);
-		
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", 
-						env.getProperty("hibernate.dialect"));
+				env.getProperty("hibernate.dialect"));
 		//properties.put("hibernate.cache.use_second_level_cache", 
-		//				env.getProperty("second.level.cache"));
+		//		env.getProperty("second.level.cache"));
 		properties.put("hibernate.cache.provider_class", 
-						env.getProperty("cache.provider.class"));
+				env.getProperty("cache.provider.class"));
 		properties.put("hibernate.hbm2ddl.auto", 
-						env.getProperty("hbm2ddl.auto"));
+				env.getProperty("hbm2ddl.auto"));
 		properties.put("hibernate.show_sql", 
-						env.getProperty("show_sql"));
+				env.getProperty("show_sql"));
 		properties.put("hibernate.cache.region.factory_class", 
-						env.getProperty("cache.region.class"));
+				env.getProperty("cache.region.class"));
+		
 		bean.setJpaProperties(properties);
 		JpaVendorAdapter adapter = new 
 				HibernateJpaVendorAdapter();
 		bean.setJpaVendorAdapter(adapter);
+//		bean.setEntityInterceptor(
+//				new GlobalInterceptor());
 		return bean;
 	}
+	
 }

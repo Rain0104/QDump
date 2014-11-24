@@ -1,47 +1,37 @@
-package org.data.art.qdump.service.impl;
+package org.data.art.qdump.persistence;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.data.art.qdump.config.PersonDAO;
 import org.data.art.qdump.entities.PersonEntity;
 import org.data.art.qdump.enums.PersonRoleEnums;
-import org.data.art.qdump.service.QDumpService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@Transactional
-public class QDumpServiceImpl implements QDumpService{
-	@Autowired
-	private PersonDAO personDAO;
+@Repository
+public class PersonDAOImpl implements PersonDAO{
+	
+	@PersistenceContext
+	private EntityManager em;
 
 	@Override
 	public void addPerson(PersonEntity person) {
-		personDAO.addPerson(person);	
+		em.persist(person);
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public PersonEntity getPerson(int id) {
-		return personDAO.getPerson(id);
+		return em.find(PersonEntity.class, id);
 	}
 
 	@Override
 	public List<PersonEntity> getPersons() {
+		// TODO Auto-generated method stub
 		return null;
-				//(List<PersonEntity>) personCrudRepository.findAll();
-	}
-
-	@Override
-	public void deletePerson(int id) {
-		//personCrudRepository.delete(id);
-	}
-
-	@Override
-	public void deletePersons() {
-		//personCrudRepository.deleteAll();		
 	}
 
 	@Override
@@ -60,6 +50,18 @@ public class QDumpServiceImpl implements QDumpService{
 	public List<PersonEntity> getPersonByRole(PersonRoleEnums role) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void deletePerson(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deletePersons() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
