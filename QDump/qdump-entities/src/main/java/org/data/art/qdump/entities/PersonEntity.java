@@ -16,11 +16,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.data.art.qdump.enums.PersonRoleEnums;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table(name="PERSONS")
 @AttributeOverride(name="id", column=@Column(
 		name="person_id", insertable=false, updatable=false))
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 /*
 @NamedQueries({
 	@NamedQuery(name = "Person.deleteByEmail", query = "DELETE FROM Person p "
@@ -123,4 +126,12 @@ public class PersonEntity extends HasModificationInfo{
 			this.role = role;
 		}
 
+		@Override
+		public String toString() {
+			return "PersonEntity [firstname=" + firstname + ", lastname="
+					+ lastname + ", email=" + email + ", login=" + login
+					+ ", pass=" + pass + ", role=" + role + ", id=" + id + "]";
+		}
+
+		
 }
