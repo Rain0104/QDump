@@ -17,14 +17,20 @@ import javax.persistence.Table;
 
 import org.dataart.qdump.entities.enums.QuestionTypeEnums;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "questions")
 @AttributeOverride(name = "id", column = @Column(name = "id_question", insertable = false, updatable = false))
+@JsonAutoDetect
 public class QuestionEntity extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = 7827573669263895832L;
 	private String question;
 	private QuestionTypeEnums type;
 	private List<AnswerEntity> answerEntities;
+	@JsonBackReference
 	private QuestionnaireEntity questionnaireEntity;
 
 	@Column(name = "question", nullable = false, length = 1500)
@@ -36,8 +42,9 @@ public class QuestionEntity extends BaseEntity implements Serializable{
 		this.question = question;
 	}
 
-	@Column(name = "vizualization_type", nullable = false)
+	@Column(name = "question_type", nullable = false)
 	@Enumerated(EnumType.STRING)
+	@JsonProperty("question_type")
 	public QuestionTypeEnums getType() {
 		return type;
 	}
@@ -47,6 +54,7 @@ public class QuestionEntity extends BaseEntity implements Serializable{
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "questionEntity", fetch = FetchType.LAZY)
+	@JsonProperty("answer_entities")
 	public List<AnswerEntity> getAnswerEntities() {
 		return answerEntities;
 	}

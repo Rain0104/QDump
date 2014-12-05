@@ -18,13 +18,18 @@ import org.dataart.qdump.entities.questionnaire.AnswerEntity;
 import org.dataart.qdump.entities.questionnaire.BaseEntity;
 import org.dataart.qdump.entities.questionnaire.QuestionEntity;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 
 @Entity
 @Table(name = "person_questions")
 @AttributeOverride(name = "id", column = @Column(name = "id_person_question", insertable = false, updatable = false))
+@JsonAutoDetect
 public class PersonQuestionEntity extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = -6691017410211190245L;
+	@JsonBackReference
 	private PersonQuestionnaireEntity personQuestionnaireEntity;
 	private QuestionEntity questionEntity;
 	private boolean isCorrect;
@@ -43,6 +48,7 @@ public class PersonQuestionEntity extends BaseEntity implements Serializable{
 
 	@OneToOne
 	@JoinColumn(name = "id_question")
+	@JsonProperty("question_entity")
 	public QuestionEntity getQuestionEntity() {
 		return questionEntity;
 	}
@@ -52,6 +58,7 @@ public class PersonQuestionEntity extends BaseEntity implements Serializable{
 	}
 
 	@Column(name = "correct", columnDefinition = "BIT(1) DEFAULT 0")
+	@JsonProperty("correct")
 	public boolean isCorrect() {
 		return isCorrect;
 	}
@@ -61,6 +68,7 @@ public class PersonQuestionEntity extends BaseEntity implements Serializable{
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "personQuestionEntity", orphanRemoval = true)
+	@JsonProperty("person_answer_entities")
 	public List<PersonAnswerEntity> getPersonAnswerEntities() {
 		return personAnswerEntities;
 	}

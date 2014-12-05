@@ -12,13 +12,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @MappedSuperclass
-public abstract class PersonQuestionnaireBaseEntity implements Serializable{
+public abstract class PersonQuestionnaireBaseEntity implements Serializable {
 	private static final long serialVersionUID = 7666829487657683004L;
 	private long id;
-	private PersonEntity ownBy;
 	private Date createdDate;
 	private Date modifiedDate;
+	@JsonBackReference
+	private PersonEntity ownBy;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,17 +34,8 @@ public abstract class PersonQuestionnaireBaseEntity implements Serializable{
 		this.id = id;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "ownBy", referencedColumnName = "id_person")
-	public PersonEntity getOwnBy() {
-		return ownBy;
-	}
-
-	public void setOwnBy(PersonEntity ownBy) {
-		this.ownBy = ownBy;
-	}
-
 	@Column(name = "created_date", nullable = false)
+	@JsonProperty("created_date")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -50,6 +45,7 @@ public abstract class PersonQuestionnaireBaseEntity implements Serializable{
 	}
 
 	@Column(name = "modified_date", nullable = true)
+	@JsonProperty("modified_date")
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -58,6 +54,13 @@ public abstract class PersonQuestionnaireBaseEntity implements Serializable{
 		this.modifiedDate = modifiedDate;
 	}
 
-	
-	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "ownBy", referencedColumnName = "id_person")
+	public PersonEntity getOwnBy() {
+		return ownBy;
+	}
+
+	public void setOwnBy(PersonEntity ownBy) {
+		this.ownBy = ownBy;
+	}
 }

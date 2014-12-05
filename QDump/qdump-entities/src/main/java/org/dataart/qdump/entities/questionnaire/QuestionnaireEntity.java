@@ -11,14 +11,16 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "questionnaires")
 @AttributeOverrides(value = {
 		@AttributeOverride(name = "id", column = @Column(name = "id_questionnaire", insertable = false, updatable = false)),
 		@AttributeOverride(name = "created_by", column = @Column(name = "created_by", insertable = false, updatable = false, nullable = false)) })
-@XmlRootElement
+@JsonAutoDetect
 public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Serializable{
 	private static final long serialVersionUID = 8952388499186170808L;
 	private String name;
@@ -45,6 +47,7 @@ public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Seri
 	}
 
 	@Column(name = "is_published", columnDefinition = "BIT(1) DEFAULT 0")
+	@JsonProperty("published")
 	public boolean isPublished() {
 		return isPublished;
 	}
@@ -54,6 +57,7 @@ public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Seri
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "questionnaireEntity", fetch = FetchType.EAGER, orphanRemoval = true)
+	@JsonProperty("question_entities")
 	public List<QuestionEntity> getQuestionEntities() {
 		return questionEntities;
 	}

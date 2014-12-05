@@ -12,14 +12,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "answers")
 @AttributeOverrides(value = { 
 		@AttributeOverride(name = "id", column = @Column(name = "id_answer", insertable = false, updatable = false))})
+@JsonAutoDetect
 public class AnswerEntity extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = -5973094404031746982L;
 	private String answer;
 	private boolean isCorrect;
+	@JsonBackReference
 	private QuestionEntity questionEntity;
 
 	@Column(name = "answer", length = 500)
@@ -42,6 +48,7 @@ public class AnswerEntity extends BaseEntity implements Serializable{
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_question", referencedColumnName = "id_question")
+	@JsonProperty("question_entity")
 	public QuestionEntity getQuestionEntity() {
 		return questionEntity;
 	}
@@ -58,7 +65,5 @@ public class AnswerEntity extends BaseEntity implements Serializable{
 				+ ", getCreatedDate()=" + getCreatedDate()
 				+ ", getModifiedDate()=" + getModifiedDate() + "]";
 	}
-
-	
 }
 

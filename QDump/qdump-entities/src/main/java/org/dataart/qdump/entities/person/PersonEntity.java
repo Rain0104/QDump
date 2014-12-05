@@ -12,17 +12,20 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.dataart.qdump.entities.enums.PersonGroupEnums;
 import org.dataart.qdump.entities.questionnaire.BaseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "persons")
 @AttributeOverride(name = "id", column = @Column(name = "id_person", insertable = false, updatable = false))
-@XmlRootElement
+@JsonAutoDetect
 public class PersonEntity extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = -219526512840281300L;
 	private String firstname;
@@ -33,6 +36,7 @@ public class PersonEntity extends BaseEntity implements Serializable {
 	private boolean isEnabled;
 	private byte gender;
 	private PersonGroupEnums personGroup = PersonGroupEnums.USER;
+	@JsonIgnore
 	private List<PersonQuestionnaireEntity> personQuestionnaireEntities;
 
 	public PersonEntity() {
@@ -133,6 +137,7 @@ public class PersonEntity extends BaseEntity implements Serializable {
 	 */
 	@Column(name = "person_group", columnDefinition = "VARCHAR(10) DEFAULT 'USER'", nullable = false)
 	@Enumerated(EnumType.STRING)
+	@JsonProperty("person_group")
 	public PersonGroupEnums getPersonGroup() {
 		return personGroup;
 	}

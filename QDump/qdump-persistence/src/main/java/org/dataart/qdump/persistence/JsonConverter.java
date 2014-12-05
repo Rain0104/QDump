@@ -6,11 +6,14 @@ import java.util.Date;
 
 import org.dataart.qdump.entities.enums.PersonGroupEnums;
 import org.dataart.qdump.entities.person.PersonEntity;
+import org.dataart.qdump.entities.person.PersonQuestionnaireEntity;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonConverter {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException {
 		PersonEntity entity = new PersonEntity();
 		entity.setCreatedDate(new Date());
 		entity.setEmail("test@gmail.com");
@@ -23,11 +26,7 @@ public class JsonConverter {
 		entity.setPersonGroup(PersonGroupEnums.USER);
 		entity.setSurname("surname");
 		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			objectMapper.writeValue(new File("/Users/artemvlasov/Documents/json.txt"), entity);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		PersonQuestionnaireEntity questionnaireEntity = objectMapper.readValue(new File("/Users/artemvlasov/Documents/PersonQuestionnaire.txt"), PersonQuestionnaireEntity.class);
+		System.out.println(questionnaireEntity.getId());
 	}
 }

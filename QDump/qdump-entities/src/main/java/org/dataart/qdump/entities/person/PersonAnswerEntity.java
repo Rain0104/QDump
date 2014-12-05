@@ -14,18 +14,25 @@ import javax.persistence.Table;
 import org.dataart.qdump.entities.questionnaire.AnswerEntity;
 import org.dataart.qdump.entities.questionnaire.BaseEntity;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "person_answers")
 @AttributeOverride(name = "id", column = @Column(name = "id_person_answer", insertable = false, updatable = false))
+@JsonAutoDetect
 public class PersonAnswerEntity extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = 5266384349299279727L;
 	private AnswerEntity answerEntity;
 	private String personAnswer;
 	private boolean marked;
+	@JsonBackReference
 	private PersonQuestionEntity personQuestionEntity;
 
 	@OneToOne
 	@JoinColumn(name = "id_answer")
+	@JsonProperty("answer_entity")
 	public AnswerEntity getAnswerEntity() {
 		return answerEntity;
 	}
@@ -35,6 +42,7 @@ public class PersonAnswerEntity extends BaseEntity implements Serializable{
 	}
 
 	@Column(name = "person_answer", length = 500)
+	@JsonProperty("person_answer")
 	public String getPersonAnswer() {
 		return personAnswer;
 	}

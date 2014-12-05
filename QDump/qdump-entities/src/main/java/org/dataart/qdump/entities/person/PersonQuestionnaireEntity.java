@@ -12,18 +12,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.dataart.qdump.entities.enums.QuestionTypeEnums;
 import org.dataart.qdump.entities.enums.QuestionnaireStatusEnums;
 import org.dataart.qdump.entities.questionnaire.QuestionnaireEntity;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 
 @Entity
 @Table(name = "person_questionnaires")
 @AttributeOverride(name = "id", column = @Column(name = "id_person_questionnaire", insertable = false, updatable = false))
-@XmlRootElement
+@JsonAutoDetect
 public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity implements Serializable{
 	private static final long serialVersionUID = 586942138808550795L;
 	private QuestionnaireEntity questionnaireEntity;
@@ -32,6 +33,7 @@ public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity imp
 
 	@OneToOne
 	@JoinColumn(name = "id_questionnaire", referencedColumnName = "id_questionnaire")
+	@JsonProperty("questionnaire_entity")
 	public QuestionnaireEntity getQuestionnaireEntity() {
 		return questionnaireEntity;
 	}
@@ -50,6 +52,7 @@ public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity imp
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "personQuestionnaireEntity", orphanRemoval = true)
+	@JsonProperty("person_question_entities")
 	public List<PersonQuestionEntity> getPersonQuestionEntities() {
 		return personQuestionEntities;
 	}

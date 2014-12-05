@@ -1,6 +1,8 @@
 package org.dataart.qdump.persistence;
 
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,21 +21,53 @@ import org.dataart.qdump.entities.questionnaire.AnswerEntity;
 import org.dataart.qdump.entities.questionnaire.QuestionEntity;
 import org.dataart.qdump.entities.questionnaire.QuestionnaireEntity;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 
 public class JpaTest {
-	public static void main(String[] args) throws JsonProcessingException, FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("qdump-persistence");
 		EntityManager em = emf.createEntityManager();
+		File file = new File("/Users/artemvlasov/Documents/QDumpEntities.txt");
+		FileOutputStream outputStream = new FileOutputStream(file, true);
+		ObjectMapper mapper = new ObjectMapper();
+		SchemaFactoryWrapper visitor = new SchemaFactoryWrapper();
 		try {
-			ObjectMapper mapper = new ObjectMapper();
+			outputStream.write("\n//Person Questionnaire Entity Schema\n".getBytes());
+			outputStream.flush();
+			mapper.acceptJsonFormatVisitor(PersonQuestionnaireEntity.class, visitor);
+			JsonSchema schema = visitor.finalSchema();
+			mapper.writeValue(outputStream, schema);
+			
+			mapper.acceptJsonFormatVisitor(PersonEntity.class, visitor);
+			schema = visitor.finalSchema();
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Person Entity Schema\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, schema);
+			
+			mapper.acceptJsonFormatVisitor(QuestionnaireEntity.class, visitor);
+			schema = visitor.finalSchema();
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Questionnaire Entity Schema\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, schema);
+			
 			
 			//PersonEntity
 			PersonEntity personEntity1 = createPersonEntity("first@gmail.com", "login1", "password1", "surname1", "name1", true, (byte) 1);
 			PersonEntity personEntity2 = createPersonEntity("second@gmail.com", "login2", "password2", "surname2", "name2", true, (byte) 1);
 			
-			System.out.println(mapper.writeValueAsString(personEntity2));
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Person Entity #1\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, personEntity1);
+			
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Person Entity #2\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, personEntity2);
 			
 			//AnswerEntity
 			List<AnswerEntity> answerEntities1 = new ArrayList<AnswerEntity>();
@@ -45,8 +79,6 @@ public class JpaTest {
 			answerEntities3.add(createAnswerEntity("first answer third question", true));
 			answerEntities3.add(createAnswerEntity("second answer third question", true));
 			answerEntities3.add(createAnswerEntity("third answer third question", true));
-			
-			System.out.println(mapper.writeValueAsString(answerEntities1.get(0)));
 			
 			//QuestionEntity
 			List<QuestionEntity> questionEntities1 = new ArrayList<QuestionEntity>();
@@ -63,6 +95,21 @@ public class JpaTest {
 			questionnaireEntities2.add(createQuestionnaireEntity(personEntity2, questionEntities2, "second questionnaire", "second", true));
 			List<QuestionnaireEntity> questionnaireEntities3 = new ArrayList<QuestionnaireEntity>();
 			questionnaireEntities3.add(createQuestionnaireEntity(personEntity1, questionEntities3, "third questionnaire", "third", false));
+			
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Questionnaire Entity #1\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, questionnaireEntities1.get(0));
+			
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Questionnaire Entity #2\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, questionnaireEntities2.get(0));
+			
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Questionnaire Entity #3\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, questionnaireEntities3.get(0));
 			
 			//PersonAnswerEntity
 			List<PersonAnswerEntity> personAnswerEntities1 = new ArrayList<PersonAnswerEntity>();
@@ -96,6 +143,21 @@ public class JpaTest {
 			List<PersonQuestionnaireEntity> personQuestionnaireEntities3 = new ArrayList<PersonQuestionnaireEntity>();
 			personQuestionnaireEntities3.add(createPersonQuestionnaireEntity(personQuestionEntities3, questionnaireEntities3.get(0), personEntity1));
 			personQuestionnaireEntities3.stream().forEach(entity -> entity.checkStatus());
+			
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Person Questionnaire Entity #1\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, personQuestionnaireEntities1.get(0));
+			
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Person Questionnaire Entity #2\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, personQuestionnaireEntities2.get(0));
+			
+			outputStream = new FileOutputStream(file, true);
+			outputStream.write("\n//Person Questionnaire Entity #3\n".getBytes());
+			outputStream.flush();
+			mapper.writeValue(outputStream, personQuestionnaireEntities3.get(0));
 			
 			em.getTransaction().begin();
 			em.persist(personEntity1);
