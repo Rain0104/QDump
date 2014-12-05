@@ -1,4 +1,4 @@
-package org.data.art.qdump.model;
+package org.dataart.qdump.model;
 
 /**
  * Hello world!
