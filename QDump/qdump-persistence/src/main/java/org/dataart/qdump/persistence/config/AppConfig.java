@@ -1,4 +1,4 @@
-package org.dataart.qdump.config;
+package org.dataart.qdump.persistence.config;
 
 import java.util.Properties;
 

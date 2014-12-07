@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 		@AttributeOverride(name = "id", column = @Column(name = "id_questionnaire", insertable = false, updatable = false)),
 		@AttributeOverride(name = "created_by", column = @Column(name = "created_by", insertable = false, updatable = false, nullable = false)) })
 @JsonAutoDetect
-public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Serializable{
+public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Serializable {
 	private static final long serialVersionUID = 8952388499186170808L;
 	private String name;
 	private String description;
@@ -71,11 +71,11 @@ public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Seri
 		return "QuestionnaireEntity [getName()=" + getName()
 				+ ", getDescription()=" + getDescription() + ", isPublished()="
 				+ isPublished() + ", getId()=" + getId() + ", getCreatedBy()="
-				+ getCreatedBy() == null ? "null" : getCreatedBy().toString() + ", getModifiedBy()=" + getModifiedBy() == null ? "null" : getModifiedBy().toString()
-				+ ", getCreatedDate()=" + getCreatedDate()
-				+ ", getModifiedDate()=" + getModifiedDate() + "]";
+				+ getCreatedBy() == null ? "null" : getCreatedBy().toString()
+				+ ", getModifiedBy()=" + getModifiedBy() == null ? "null"
+				: getModifiedBy().toString() + ", getCreatedDate()="
+						+ getCreatedDate() + ", getModifiedDate()="
+						+ getModifiedDate() + "]";
 	}
 
-	
 }
-

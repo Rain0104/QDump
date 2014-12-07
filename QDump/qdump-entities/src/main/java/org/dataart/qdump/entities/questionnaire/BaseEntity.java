@@ -9,10 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @MappedSuperclass
-public abstract class BaseEntity implements Serializable{
+public abstract class BaseEntity implements Serializable {
 	private static final long serialVersionUID = -1310872166991256747L;
 	protected long id;
 	private Date createdDate;
@@ -28,8 +26,7 @@ public abstract class BaseEntity implements Serializable{
 		this.id = id;
 	}
 
-	@Column(name = "created_date", nullable = false)
-	@JsonProperty("created_date")
+	@Column(name = "created_date", nullable = false, updatable = false)
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -39,7 +36,6 @@ public abstract class BaseEntity implements Serializable{
 	}
 
 	@Column(name = "modified_date", nullable = true)
-	@JsonProperty("modified_date")
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -48,4 +44,3 @@ public abstract class BaseEntity implements Serializable{
 		this.modifiedDate = modifiedDate;
 	}
 }
-

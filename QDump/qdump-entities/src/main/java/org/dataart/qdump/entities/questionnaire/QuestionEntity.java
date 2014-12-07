@@ -19,13 +19,16 @@ import org.dataart.qdump.entities.enums.QuestionTypeEnums;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "questions")
 @AttributeOverride(name = "id", column = @Column(name = "id_question", insertable = false, updatable = false))
 @JsonAutoDetect
-public class QuestionEntity extends BaseEntity implements Serializable{
+@JsonIgnoreProperties({"createdDate", "modifiedDate"})
+public class QuestionEntity extends BaseEntity implements
+		Serializable {
 	private static final long serialVersionUID = 7827573669263895832L;
 	private String question;
 	private QuestionTypeEnums type;
@@ -77,11 +80,10 @@ public class QuestionEntity extends BaseEntity implements Serializable{
 	public String toString() {
 		return "QuestionEntity [getQuestion()=" + getQuestion()
 				+ ", getType()=" + getType() + ", getQuestionnaireEntity()="
-				+ getQuestionnaireEntity() == null ? "null" : getQuestionnaireEntity().toString() + ", getId()=" + getId()
-				+ ", getCreatedDate()=" + getCreatedDate()
-				+ ", getModifiedDate()=" + getModifiedDate() + "]";
+				+ getQuestionnaireEntity() == null ? "null"
+				: getQuestionnaireEntity().toString() + ", getId()=" + getId()
+						+ ", getCreatedDate()=" + getCreatedDate()
+						+ ", getModifiedDate()=" + getModifiedDate() + "]";
 	}
 
-	
 }
-

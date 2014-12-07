@@ -21,10 +21,10 @@ public class JsonConverter {
 		entity.setGender((byte) 1);
 		entity.setLogin("login");
 		entity.setModifiedDate(new Date(System.currentTimeMillis() + 100000));
-		entity.setName("name");
+		entity.setFirstname("name");
 		entity.setPassword("password");
 		entity.setPersonGroup(PersonGroupEnums.USER);
-		entity.setSurname("surname");
+		entity.setLastname("surname");
 		ObjectMapper objectMapper = new ObjectMapper();
 		PersonQuestionnaireEntity questionnaireEntity = objectMapper.readValue(new File("/Users/artemvlasov/Documents/PersonQuestionnaire.txt"), PersonQuestionnaireEntity.class);
 		System.out.println(questionnaireEntity.getId());

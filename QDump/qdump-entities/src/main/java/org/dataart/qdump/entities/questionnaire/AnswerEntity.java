@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -21,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AttributeOverrides(value = { 
 		@AttributeOverride(name = "id", column = @Column(name = "id_answer", insertable = false, updatable = false))})
 @JsonAutoDetect
+@JsonIgnoreProperties({"createdDate", "modifiedDate"})
 public class AnswerEntity extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = -5973094404031746982L;
 	private String answer;

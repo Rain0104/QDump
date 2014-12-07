@@ -15,28 +15,33 @@ import javax.persistence.Table;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.dataart.qdump.entities.enums.PersonGroupEnums;
-import org.dataart.qdump.entities.questionnaire.BaseEntity;
+import org.dataart.qdump.entities.questionnaire.QuestionnaireBaseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "persons")
 @AttributeOverride(name = "id", column = @Column(name = "id_person", insertable = false, updatable = false))
 @JsonAutoDetect
-public class PersonEntity extends BaseEntity implements Serializable {
+@JsonIgnoreProperties({ "password" })
+public class PersonEntity extends QuestionnaireBaseEntity implements Serializable {
 	private static final long serialVersionUID = -219526512840281300L;
 	private String firstname;
 	private String lastname;
 	private String email;
 	private String login;
 	private String password;
+	@JsonProperty("enabled")
 	private boolean isEnabled;
 	private byte gender;
+	@JsonProperty("person_group")
 	private PersonGroupEnums personGroup = PersonGroupEnums.USER;
-	@JsonIgnore
+	@JsonManagedReference
+	@JsonProperty("person_questionnaire_entities")
 	private List<PersonQuestionnaireEntity> personQuestionnaireEntities;
 
 	public PersonEntity() {
@@ -54,22 +59,22 @@ public class PersonEntity extends BaseEntity implements Serializable {
 	 * 
 	 * @return
 	 */
-	@Column(name = "name", length = 35)
-	public String getName() {
+	@Column(name = "firstname", length = 35)
+	public String getFirstname() {
 		return firstname;
 	}
 
-	public void setName(String name) {
-		this.firstname = validateName(name);
+	public void setFirstname(String firstname) {
+		this.firstname = validateName(firstname);
 	}
 
-	@Column(name = "surname", length = 35)
-	public String getSurname() {
+	@Column(name = "lastname", length = 35)
+	public String getLastname() {
 		return lastname;
 	}
 
-	public void setSurname(String surname) {
-		this.lastname = validateSurname(surname);
+	public void setLastname(String lastname) {
+		this.lastname = validateSurname(lastname);
 	}
 
 	@Column(name = "email", nullable = false, unique = true, length = 254)
@@ -102,8 +107,9 @@ public class PersonEntity extends BaseEntity implements Serializable {
 	}
 
 	/**
-	 * Set true if this use is verified by 
-	 * ADMIN {@link PersonGroupEnums} after email confirmation
+	 * Set true if this use is verified by ADMIN {@link PersonGroupEnums} after
+	 * email confirmation
+	 * 
 	 * @param isEnabled
 	 */
 	@Column(name = "enabled", nullable = false, columnDefinition = "BIT(1) DEFAULT 0")
@@ -114,10 +120,11 @@ public class PersonEntity extends BaseEntity implements Serializable {
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
-	
+
 	/**
 	 * Gender has three values 1 = Male, 2 = Female, 9 = Not Specified. By
 	 * default - 9. This values is equals to Data Standards Catalogue.
+	 * 
 	 * @param gender
 	 */
 	@Column(name = "gender", columnDefinition = "TINYINT DEFAULT 9")
@@ -125,19 +132,18 @@ public class PersonEntity extends BaseEntity implements Serializable {
 		return gender;
 	}
 
-	
 	public void setGender(byte gender) {
 		this.gender = gender;
 	}
 
 	/**
-	 * All user that was created should have {@link PersonGroupEnums}
-	 * by default persons has USER group.
+	 * All user that was created should have {@link PersonGroupEnums} by default
+	 * persons has USER group.
+	 * 
 	 * @return person group for the current person
 	 */
 	@Column(name = "person_group", columnDefinition = "VARCHAR(10) DEFAULT 'USER'", nullable = false)
 	@Enumerated(EnumType.STRING)
-	@JsonProperty("person_group")
 	public PersonGroupEnums getPersonGroup() {
 		return personGroup;
 	}
@@ -175,7 +181,9 @@ public class PersonEntity extends BaseEntity implements Serializable {
 	/**
 	 * Surname validator, persisted surname should contains letter from A to Z,
 	 * spaces, -, '. Max length 35
-	 * @param surname Inserted surname for person
+	 * 
+	 * @param surname
+	 *            Inserted surname for person
 	 * @return
 	 */
 	private String validateSurname(String surname) {
@@ -201,15 +209,13 @@ public class PersonEntity extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PersonEntity [getName()=" + getName() + ", getSurname()="
-				+ getSurname() + ", getEmail()=" + getEmail() + ", getLogin()="
-				+ getLogin() + ", getPassword()=" + getPassword()
-				+ ", isEnabled()=" + isEnabled() + ", getGender()="
-				+ getGender() + ", getPersonGroup()=" + getPersonGroup()
-				+ ", getCreatedDate()=" + getCreatedDate()
+		return "PersonEntity [getName()=" + getFirstname() + ", getSurname()="
+				+ getLastname() + ", getEmail()=" + getEmail()
+				+ ", getLogin()=" + getLogin() + ", getPassword()="
+				+ getPassword() + ", isEnabled()=" + isEnabled()
+				+ ", getGender()=" + getGender() + ", getPersonGroup()="
+				+ getPersonGroup() + ", getCreatedDate()=" + getCreatedDate()
 				+ ", getModifiedDate()=" + getModifiedDate() + "]";
 	}
-	
-	
 
 }
