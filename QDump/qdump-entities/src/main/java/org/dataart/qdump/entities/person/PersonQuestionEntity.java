@@ -41,10 +41,10 @@ public class PersonQuestionEntity extends BaseEntity implements
 	private QuestionEntity questionEntity;
 	@JsonProperty("correct")
 	private boolean isCorrect;
-	@JsonProperty("person_answer_entities")
+	@JsonProperty("person_answers")
 	private List<PersonAnswerEntity> personAnswerEntities;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_person_questionnaire", referencedColumnName = "id_person_questionnaire")
 	public PersonQuestionnaireEntity getPersonQuestionnaireEntity() {
 		return personQuestionnaireEntity;
@@ -55,8 +55,8 @@ public class PersonQuestionEntity extends BaseEntity implements
 		this.personQuestionnaireEntity = personQuestionnaireEntity;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_question")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_question", referencedColumnName = "id_question")
 	public QuestionEntity getQuestionEntity() {
 		return questionEntity;
 	}
@@ -117,6 +117,20 @@ public class PersonQuestionEntity extends BaseEntity implements
 			}
 		}
 		return true;
+	}
+	
+	public void addPersonQuestionnaireEntity(PersonQuestionnaireEntity personQuestionnaireEntity) {
+		this.personQuestionnaireEntity = personQuestionnaireEntity;
+		if(!personQuestionnaireEntity.getPersonQuestionEntities().contains(this)) {
+			personQuestionnaireEntity.getPersonQuestionEntities().add(this);
+		}
+	}
+	
+	public void addPersonAnswerEntity(PersonAnswerEntity personAnswerEntity) {
+		this.personAnswerEntities.add(personAnswerEntity);
+		if(personAnswerEntity.getPersonQuestionEntity() != this) {
+			personAnswerEntity.setPersonQuestionEntity(this);
+		}
 	}
 
 	@Override

@@ -28,14 +28,14 @@ public class JpaTest {
 				.createEntityManagerFactory("qdump-persistence");
 		EntityManager em = emf.createEntityManager();
 
-		/*File file = new File(
-				"/Users/artemvlasov/Documents/QDump Json Entities/QDumpEntities.txt");
-		FileOutputStream outputStream;*/
+		File file = new File(
+				"/Users/artemvlasov/Documents/QDump Json Entities/NewQDumpEntities.txt");
+		FileOutputStream outputStream;
 
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 
-			/*// PersonEntity
+			// PersonEntity
 			PersonEntity personEntity1 = createPersonEntity("first@gmail.com",
 					"login1", "password1", "surname1", "name1", true, (byte) 1);
 			PersonEntity personEntity2 = createPersonEntity("second@gmail.com",
@@ -174,7 +174,7 @@ public class JpaTest {
 			outputStream.write("\n//Person Questionnaire Entity #3\n"
 					.getBytes());
 			outputStream.flush();
-			mapper.writeValue(outputStream, personQuestionnaireEntities3.get(0));*/
+			mapper.writeValue(outputStream, personQuestionnaireEntities3.get(0));
 
 			em.getTransaction().begin();
 			/*em.persist(personEntity1);
@@ -186,13 +186,24 @@ public class JpaTest {
 			persistCollection(questionnaireEntities2, em);
 			persistCollection(questionnaireEntities3, em);*/
 			
-			PersonQuestionnaireEntity pqe = mapper
+			/*PersonQuestionnaireEntity pqe = mapper
 					.readValue(
 							new File(
 									"/Users/artemvlasov/Documents/QDump Json Entities/Parsed Person Questionnaire Entity.txt"),
 							PersonQuestionnaireEntity.class);
-			em.persist(pqe);
-			
+			pqe.getPersonQuestionEntities()
+					.stream()
+					.forEach(entity -> entity.addPersonQuestionnaireEntity(pqe));
+			pqe.getPersonQuestionEntities()
+					.stream()
+					.forEach(
+							entity -> entity
+									.getPersonAnswerEntities()
+									.stream()
+									.forEach(
+											answerEntity -> answerEntity
+													.addPersonQuestionEntity(entity)));
+			em.merge(pqe);*/
 			em.getTransaction().commit();
 		} finally {
 			if (em.isOpen()) {

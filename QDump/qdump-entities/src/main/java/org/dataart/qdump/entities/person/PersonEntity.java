@@ -20,7 +20,6 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -40,8 +39,7 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	private byte gender;
 	@JsonProperty("person_group")
 	private PersonGroupEnums personGroup = PersonGroupEnums.USER;
-	@JsonManagedReference
-	@JsonProperty("person_questionnaire_entities")
+	@JsonProperty("person_questionnaires")
 	private List<PersonQuestionnaireEntity> personQuestionnaireEntities;
 
 	public PersonEntity() {

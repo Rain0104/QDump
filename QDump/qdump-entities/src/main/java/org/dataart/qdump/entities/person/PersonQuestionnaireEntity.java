@@ -34,10 +34,10 @@ public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity
 	@JsonSerialize(using = QuestionnairePersonSerializer.class)
 	private QuestionnaireEntity questionnaireEntity;
 	private String status;
-	@JsonProperty("person_question_entities")
+	@JsonProperty("person_questions")
 	private List<PersonQuestionEntity> personQuestionEntities;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_questionnaire", referencedColumnName = "id_questionnaire")
 	public QuestionnaireEntity getQuestionnaireEntity() {
 		return questionnaireEntity;
@@ -123,7 +123,14 @@ public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity
 		}
 		return true;
 	}
-
+	
+	public void addPersonQuestionEntity(PersonQuestionEntity personQuestionEntity) {
+		this.personQuestionEntities.add(personQuestionEntity);
+		if(personQuestionEntity.getPersonQuestionnaireEntity() != this) {
+			personQuestionEntity.setPersonQuestionnaireEntity(this);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "PersonQuestionnaireEntity [getQuestionnaireEntity()="

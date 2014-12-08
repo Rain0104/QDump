@@ -31,7 +31,9 @@ public class QuestionEntity extends BaseEntity implements
 		Serializable {
 	private static final long serialVersionUID = 7827573669263895832L;
 	private String question;
+	@JsonProperty("question_type")
 	private QuestionTypeEnums type;
+	@JsonProperty("answer_entities")
 	private List<AnswerEntity> answerEntities;
 	@JsonBackReference
 	private QuestionnaireEntity questionnaireEntity;
@@ -47,7 +49,6 @@ public class QuestionEntity extends BaseEntity implements
 
 	@Column(name = "question_type", nullable = false)
 	@Enumerated(EnumType.STRING)
-	@JsonProperty("question_type")
 	public QuestionTypeEnums getType() {
 		return type;
 	}
@@ -57,7 +58,6 @@ public class QuestionEntity extends BaseEntity implements
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "questionEntity", fetch = FetchType.LAZY)
-	@JsonProperty("answer_entities")
 	public List<AnswerEntity> getAnswerEntities() {
 		return answerEntities;
 	}
@@ -74,6 +74,13 @@ public class QuestionEntity extends BaseEntity implements
 
 	public void setQuestionnaireEntity(QuestionnaireEntity questionnaireEntity) {
 		this.questionnaireEntity = questionnaireEntity;
+	}
+	
+	public void addQuestionnaireEntity(QuestionnaireEntity questionnaireEntity) {
+		this.questionnaireEntity = questionnaireEntity;
+		if(!questionnaireEntity.getQuestionEntities().contains(this)) {
+			questionnaireEntity.getQuestionEntities().add(this);
+		}
 	}
 
 	@Override

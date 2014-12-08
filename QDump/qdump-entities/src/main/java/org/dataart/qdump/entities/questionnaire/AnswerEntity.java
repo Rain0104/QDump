@@ -15,7 +15,6 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "answers")
@@ -50,13 +49,19 @@ public class AnswerEntity extends BaseEntity implements Serializable{
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_question", referencedColumnName = "id_question")
-	@JsonProperty("question_entity")
 	public QuestionEntity getQuestionEntity() {
 		return questionEntity;
 	}
 
 	public void setQuestionEntity(QuestionEntity questionEntity) {
 		this.questionEntity = questionEntity;
+	}
+	
+	public void addQuestionEntity(QuestionEntity questionEntity) {
+		this.questionEntity = questionEntity;
+		if(!questionEntity.getAnswerEntities().contains(this)) {
+			questionEntity.getAnswerEntities().add(this);
+		}
 	}
 
 	@Override

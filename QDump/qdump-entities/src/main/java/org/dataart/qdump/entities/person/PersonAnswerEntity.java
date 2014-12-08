@@ -3,7 +3,6 @@ package org.dataart.qdump.entities.person;
 import java.io.Serializable;
 
 import javax.persistence.AttributeOverride;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +38,7 @@ public class PersonAnswerEntity extends BaseEntity implements
 	@JsonBackReference
 	private PersonQuestionEntity personQuestionEntity;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_answer")
 	public AnswerEntity getAnswerEntity() {
 		return answerEntity;
@@ -76,6 +75,13 @@ public class PersonAnswerEntity extends BaseEntity implements
 	public void setPersonQuestionEntity(
 			PersonQuestionEntity personQuestionEntity) {
 		this.personQuestionEntity = personQuestionEntity;
+	}
+	
+	public void addPersonQuestionEntity(PersonQuestionEntity personQuestionEntity) {
+		this.personQuestionEntity = personQuestionEntity;
+		if(!personQuestionEntity.getPersonAnswerEntities().contains(this)) {
+			personQuestionEntity.getPersonAnswerEntities().add(this);
+		}
 	}
 
 	@Override

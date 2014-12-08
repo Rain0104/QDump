@@ -18,7 +18,6 @@ public class AnswerPersonSerializer extends JsonSerializer<AnswerEntity>{
 		jgen.writeStartObject();
 		jgen.writeNumberField("id", value.getId());
 		jgen.writeStringField("answer", value.getAnswer());
-		jgen.writeBooleanField("correct", value.isCorrect());
 		jgen.writeEndObject();
 	}
 	
