@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -23,6 +25,12 @@ import com.google.common.base.Preconditions;
 @Entity
 @Table(name = "person_questions")
 @AttributeOverride(name = "id", column = @Column(name = "id_person_question", insertable = false, updatable = false))
+@NamedQueries({
+	@NamedQuery(name = "PersonQuestionEntity.getCorrectQuestion", query = "FROM PersonQuestionEntity pq "
+			+ "WHERE pq.isCorrect = ?1"),
+	@NamedQuery(name = "PersonQuestionEntity.getQuestionByPersonQuestionnaireId", query = "FROM PersonQuestionEntity pq "
+			+ "WHERE pq.personQuestionnaireEntity.id = ?1")	
+	 })
 public class PersonQuestionEntity extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = -6691017410211190245L;
 	private PersonQuestionnaireEntity personQuestionnaireEntity;

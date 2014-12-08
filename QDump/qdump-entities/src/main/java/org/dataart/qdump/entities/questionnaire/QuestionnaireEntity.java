@@ -9,6 +9,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,6 +21,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 		@AttributeOverride(name = "id", column = @Column(name = "id_questionnaire", insertable = false, updatable = false)),
 		@AttributeOverride(name = "created_by", column = @Column(name = "created_by", insertable = false, updatable = false, nullable = false)) })
 @XmlRootElement
+@NamedQueries({
+	@NamedQuery(name = "QuestionnaireEntity.getQuestionnaireByName", query = "FROM QuestionnaireEntity q "
+			+ "WHERE q.name = ?1")
+	 })
 public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Serializable{
 	private static final long serialVersionUID = 8952388499186170808L;
 	private String name;

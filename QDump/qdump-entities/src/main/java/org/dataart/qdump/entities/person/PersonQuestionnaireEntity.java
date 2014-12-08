@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,6 +26,14 @@ import com.google.common.base.Preconditions;
 @Table(name = "person_questionnaires")
 @AttributeOverride(name = "id", column = @Column(name = "id_person_questionnaire", insertable = false, updatable = false))
 @XmlRootElement
+@NamedQueries({
+	@NamedQuery(name = "PersonQuestinnaireEntity.getPersonQuestinnaireByPersonId", query = "FROM PersonQuestinnaireEntity pinq "
+			+ "WHERE pinq.ownBy = ?1"),	
+	@NamedQuery(name = "PersonQuestinnaireEntity.getPersonQuestinnaireByStatus", query = "FROM PersonQuestinnaireEntity pinq "
+			+ "WHERE pinq.status = ?1"),
+	@NamedQuery(name = "PersonQuestinnaireEntity.getPersonQuestinnaireByQuestinnaireName", query = "FROM PersonQuestinnaireEntity pinq "
+			+ "WHERE pinq.questionnaireEntity.name = ?1")
+	 })
 public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity implements Serializable{
 	private static final long serialVersionUID = 586942138808550795L;
 	private QuestionnaireEntity questionnaireEntity;

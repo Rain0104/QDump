@@ -10,12 +10,20 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "answers")
 @AttributeOverrides(value = { 
 		@AttributeOverride(name = "id", column = @Column(name = "id_answer", insertable = false, updatable = false))})
+@NamedQueries({
+	@NamedQuery(name = "AnswerEntity.getAnswerByQuestionId", query = "FROM AnswerEntity a "
+			+ "WHERE a.questionEntity.id = ?1"),
+	@NamedQuery(name = "QuestionEntity.getAnswerByQuestionnaireId", query = "FROM AnswerEntity a  "
+					+ "WHERE a.questionEntity.questionnaireEntity.id = ?1")		
+	 })
 public class AnswerEntity extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = -5973094404031746982L;
 	private String answer;
