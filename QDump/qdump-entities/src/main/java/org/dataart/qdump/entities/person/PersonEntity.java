@@ -1,5 +1,6 @@
 package org.dataart.qdump.entities.person;
 
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,17 +17,19 @@ import javax.persistence.Table;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.dataart.qdump.entities.enums.PersonGroupEnums;
 import org.dataart.qdump.entities.questionnaire.QuestionnaireBaseEntity;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "persons")
 @AttributeOverride(name = "id", column = @Column(name = "id_person", insertable = false, updatable = false))
 @JsonAutoDetect
-@JsonIgnoreProperties({ "password" })
 public class PersonEntity extends QuestionnaireBaseEntity implements Serializable {
 	private static final long serialVersionUID = -219526512840281300L;
 	private String firstname;
@@ -38,8 +41,7 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	private boolean isEnabled;
 	private byte gender;
 	@JsonProperty("person_group")
-	private PersonGroupEnums personGroup = PersonGroupEnums.USER;
-	@JsonProperty("person_questionnaires")
+	private PersonGroupEnums personGroup;
 	private List<PersonQuestionnaireEntity> personQuestionnaireEntities;
 
 	public PersonEntity() {
@@ -63,7 +65,7 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	}
 
 	public void setFirstname(String firstname) {
-		this.firstname = validateName(firstname);
+		this.firstname = firstname;
 	}
 
 	@Column(name = "lastname", length = 35)
@@ -72,7 +74,7 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	}
 
 	public void setLastname(String lastname) {
-		this.lastname = validateSurname(lastname);
+		this.lastname = lastname;
 	}
 
 	@Column(name = "email", nullable = false, unique = true, length = 254)
@@ -81,13 +83,11 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	}
 
 	public void setEmail(String email) {
-		validateEmail(email);
 		this.email = email;
 	}
 
 	@Column(name = "login", nullable = false, unique = true, length = 35)
 	public String getLogin() {
-		validateName(login);
 		return login;
 	}
 
@@ -96,10 +96,12 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	}
 
 	@Column(name = "password", nullable = false, length = 255)
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
 
+	@JsonProperty("password")
 	public void setPassword(String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
 	}
@@ -131,7 +133,11 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	}
 
 	public void setGender(byte gender) {
-		this.gender = gender;
+		if(gender == 1 || gender == 2) {
+			this.gender = gender;
+		} else {
+			this.gender = 9;
+		}
 	}
 
 	/**
@@ -147,14 +153,20 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	}
 
 	public void setPersonGroup(PersonGroupEnums personGroup) {
-		this.personGroup = personGroup;
+		if(personGroup == null) {
+			this.personGroup = PersonGroupEnums.USER;
+		} else {
+			this.personGroup = personGroup;
+		}
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "ownBy", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "ownBy", orphanRemoval = true)
+	@JsonProperty("person_questionnaires")
 	public List<PersonQuestionnaireEntity> getPersonQuestionnaireEntities() {
 		return personQuestionnaireEntities;
 	}
 
+	@JsonIgnore
 	public void setPersonQuestionnaireEntities(
 			List<PersonQuestionnaireEntity> personQuestionnaireEntities) {
 		this.personQuestionnaireEntities = personQuestionnaireEntities;
@@ -166,13 +178,11 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	 * 
 	 * @param name
 	 */
-	private String validateName(String name) {
-		if (!name.matches("[A-Z][a-zA-Z]*") && name != null
-				&& name.length() > 35) {
-			throw new RuntimeException("Invalid input name, size should be "
-					+ "between 3 and 35 characters");
-		} else {
-			return name;
+	public void validateFirstname() {
+		if (!this.firstname.matches("[A-Z][a-zA-Z]*") && this.firstname != null
+				&& firstname.length() > 35) {
+			throw new RuntimeException("Invalid input firstname, max length - 35 characters, should contains"
+					+ "only A-Z, a-z symbols (valid - John, invalid - john, j0hn)");
 		}
 	}
 
@@ -184,13 +194,11 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	 *            Inserted surname for person
 	 * @return
 	 */
-	private String validateSurname(String surname) {
-		if (!surname.matches("[a-zA-z]+([ '-][a-zA-Z]+)*") && surname != null
-				&& surname.length() > 35) {
-			throw new RuntimeException("Invalid input surname, size should be "
-					+ "between 3 and 35 characters");
-		} else {
-			return surname;
+	public void validateLastname(String lastname) {
+		if (!this.lastname.matches("[a-zA-z]+([ '-][a-zA-Z]+)*") && this.lastname != null
+				&& this.lastname.length() > 35) {
+			throw new RuntimeException("Invalid input lastname, max length - 35 characters, should contains"
+					+ "only A-Z, a-z, , ', - symbols (example valid - M`gain, invalid - 1Smith");
 		}
 	}
 
@@ -199,9 +207,35 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	 * 
 	 * @param email
 	 */
-	private void validateEmail(String email) {
+	public void validateEmail(String email) {
 		if (!EmailValidator.getInstance().isValid(email)) {
 			throw new RuntimeException("You enter invalid email address");
+		}
+	}
+	
+	/**
+	 * Update all properties which is not equals to fields falue from database. Also this update is 
+	 * @param personEntity
+	 */
+	public void updatePersonEntity(PersonEntity personEntity) {
+		BeanWrapper trg = new BeanWrapperImpl(this);
+		BeanWrapper src = new BeanWrapperImpl(personEntity);
+		for (PropertyDescriptor descriptor : BeanUtils
+				.getPropertyDescriptors(PersonEntity.class)) {
+			String propName = descriptor.getName();
+			if (src.getPropertyValue(propName) != null
+					&& !propName.equals("enabled")) {
+				if (trg.getPropertyValue(propName) != src
+						.getPropertyValue(propName)) {
+					if (propName.equals("gender")
+							&& src.getPropertyValue(propName).equals(9)) {
+						continue;
+					} else {
+						trg.setPropertyValue(propName,
+								src.getPropertyValue(propName));
+					}
+				}
+			}
 		}
 	}
 

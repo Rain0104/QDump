@@ -2,6 +2,7 @@ package org.dataart.qdump.entities.questionnaire;
 
 import java.io.Serializable;
 
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
@@ -22,7 +23,7 @@ public abstract class QuestionnaireBaseEntity extends BaseEntity implements Seri
 	@JsonProperty("modified_by")
 	private PersonEntity modifiedBy;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", referencedColumnName = "id_person", nullable = true, updatable = false)
 	public PersonEntity getCreatedBy() {
 		return createdBy;
@@ -32,8 +33,8 @@ public abstract class QuestionnaireBaseEntity extends BaseEntity implements Seri
 		this.createdBy = createdBy;
 	}
 
-	@OneToOne
-	@JoinColumn(name = "modified_by", referencedColumnName = "id_person", nullable = true, updatable = false)
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "modified_by", referencedColumnName = "id_person", nullable = true, updatable = true)
 	public PersonEntity getModifiedBy() {
 		return modifiedBy;
 	}

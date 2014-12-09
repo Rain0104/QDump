@@ -1,5 +1,6 @@
 package org.dataart.qdump.persistence;
 
+import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import org.dataart.qdump.entities.questionnaire.QuestionnaireEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JpaTest {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, IntrospectionException {
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("qdump-persistence");
 		EntityManager em = emf.createEntityManager();
@@ -35,7 +36,7 @@ public class JpaTest {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 
-			// PersonEntity
+			/*// PersonEntity
 			PersonEntity personEntity1 = createPersonEntity("first@gmail.com",
 					"login1", "password1", "surname1", "name1", true, (byte) 1);
 			PersonEntity personEntity2 = createPersonEntity("second@gmail.com",
@@ -174,7 +175,7 @@ public class JpaTest {
 			outputStream.write("\n//Person Questionnaire Entity #3\n"
 					.getBytes());
 			outputStream.flush();
-			mapper.writeValue(outputStream, personQuestionnaireEntities3.get(0));
+			mapper.writeValue(outputStream, personQuestionnaireEntities3.get(0));*/
 
 			em.getTransaction().begin();
 			/*em.persist(personEntity1);
@@ -204,6 +205,11 @@ public class JpaTest {
 											answerEntity -> answerEntity
 													.addPersonQuestionEntity(entity)));
 			em.merge(pqe);*/
+			em.persist(mapper
+					.readValue(
+							new File(
+									"/Users/artemvlasov/Documents/QDump Json Entities/JSON/Person Entity.txt"),
+							PersonEntity.class));
 			em.getTransaction().commit();
 		} finally {
 			if (em.isOpen()) {

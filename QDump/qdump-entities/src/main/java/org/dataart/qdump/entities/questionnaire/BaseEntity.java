@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
 	private static final long serialVersionUID = -1310872166991256747L;
@@ -31,6 +33,7 @@ public abstract class BaseEntity implements Serializable {
 		return createdDate;
 	}
 
+	@JsonIgnore
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
@@ -40,6 +43,7 @@ public abstract class BaseEntity implements Serializable {
 		return modifiedDate;
 	}
 
+	@JsonIgnore
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
