@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -30,6 +32,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table(name = "persons")
 @AttributeOverride(name = "id", column = @Column(name = "id_person", insertable = false, updatable = false))
 @JsonAutoDetect
+@NamedQueries({
+	@NamedQuery(name = "PersonEntity.getPersonByEmail", query = "FROM PersonEntity p "
+			+ "WHERE p.email = ?1"),
+	@NamedQuery(name = "PersonEntity.getPersonByPersonGroup", query = "FROM PersonEntity p  "
+					+ "WHERE p.personGroup = ?1")		
+	 })
 public class PersonEntity extends QuestionnaireBaseEntity implements Serializable {
 	private static final long serialVersionUID = -219526512840281300L;
 	private String firstname;

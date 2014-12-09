@@ -12,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -27,6 +29,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AttributeOverride(name = "id", column = @Column(name = "id_question", insertable = false, updatable = false))
 @JsonAutoDetect
 @JsonIgnoreProperties({"createdDate", "modifiedDate"})
+@NamedQueries({
+	@NamedQuery(name = "QuestionEntity.getQuestionByName", query = "FROM QuestionEntity q "
+			+ "WHERE q.name = ?1"),
+	@NamedQuery(name = "QuestionEntity.getQuestionByQuestionnaireId", query = "FROM QuestionEntity q  "
+					+ "WHERE q.questionnaireEntity.id = ?1")		
+	 })
 public class QuestionEntity extends BaseEntity implements
 		Serializable {
 	private static final long serialVersionUID = 7827573669263895832L;
