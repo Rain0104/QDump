@@ -19,8 +19,8 @@
 			<property name="hibernate.connection.url" value="jdbc:hsqldb:mem:testdb" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.connection.username" value="sa"/>
-			<property name="hibernate.connection.password" value=""/> -->
-			<!-- <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.connection.password" value=""/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="create" />
 			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
 			<property name="hibernate.connection.url" value="jdbc:mysql://${env.OPENSHIFT_MYSQL_DB_HOST}:${env.OPENSHIFT_MYSQL_DB_PORT}/${OPENSHIFT_APP_NAME}" />

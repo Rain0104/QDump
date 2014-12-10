@@ -14,7 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @MappedSuperclass
-public abstract class QuestionnaireBaseEntity extends BaseEntity implements Serializable {
+public abstract class QuestionnaireBaseEntity extends BaseEntity implements
+		Serializable {
 	private static final long serialVersionUID = -1310872166991256747L;
 	@JsonSerialize(using = PersonEntitySerializer.class)
 	@JsonProperty("created_by")
@@ -22,7 +23,7 @@ public abstract class QuestionnaireBaseEntity extends BaseEntity implements Seri
 	@JsonSerialize(using = PersonEntitySerializer.class)
 	@JsonProperty("modified_by")
 	private PersonEntity modifiedBy;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", referencedColumnName = "id_person", nullable = true, updatable = false)
 	public PersonEntity getCreatedBy() {

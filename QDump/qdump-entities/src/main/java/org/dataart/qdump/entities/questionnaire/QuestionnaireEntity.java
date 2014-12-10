@@ -1,6 +1,7 @@
 package org.dataart.qdump.entities.questionnaire;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.AttributeOverride;
@@ -12,6 +13,8 @@ import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -23,16 +26,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 		@AttributeOverride(name = "id", column = @Column(name = "id_questionnaire", insertable = false, updatable = false)),
 		@AttributeOverride(name = "created_by", column = @Column(name = "created_by", insertable = false, updatable = false, nullable = false)) })
 @JsonAutoDetect
-@NamedQueries({
-	@NamedQuery(name = "QuestionnaireEntity.getQuestionnaireByName", query = "FROM QuestionnaireEntity q "
-			+ "WHERE q.name = ?1")
-	 })
-public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Serializable {
+@NamedQueries({ @NamedQuery(name = "QuestionnaireEntity.getQuestionnaireByName", query = "FROM QuestionnaireEntity q "
+		+ "WHERE q.name = ?1") })
+public class QuestionnaireEntity extends QuestionnaireBaseEntity implements
+		Serializable {
 	private static final long serialVersionUID = 8952388499186170808L;
 	private String name;
 	private String description;
 	@JsonProperty("published")
-	private boolean isPublished;
+	private boolean published;
 	@JsonProperty("question_entities")
 	private List<QuestionEntity> questionEntities;
 
@@ -54,16 +56,16 @@ public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Seri
 		this.description = description;
 	}
 
-	@Column(name = "is_published", columnDefinition = "BIT(1) DEFAULT 0")
+	@Column(name = "published", columnDefinition = "BIT(1) DEFAULT 0")
 	public boolean isPublished() {
-		return isPublished;
+		return published;
 	}
 
-	public void setPublished(boolean isPublished) {
-		this.isPublished = isPublished;
+	public void setPublished(boolean published) {
+		this.published = published;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "questionnaireEntity", fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "questionnaireEntity", fetch = FetchType.EAGER, orphanRemoval = true, targetEntity = QuestionEntity.class)
 	public List<QuestionEntity> getQuestionEntities() {
 		return questionEntities;
 	}
@@ -71,17 +73,69 @@ public class QuestionnaireEntity extends QuestionnaireBaseEntity implements Seri
 	public void setQuestionEntities(List<QuestionEntity> questionEntities) {
 		this.questionEntities = questionEntities;
 	}
+	
+	/**
+	 * Update {@link QuestionEntity} that is associated with this {@link QuestionnaireEntity}. 
+	 * This update is performed before persist current object to dataBase and before update.
+	 * This update is needed for One To Many associations.
+	 */
+	@PrePersist
+	@PreUpdate
+	public void setQuestionEntities() {
+		if (questionEntities != null) {
+			questionEntities.stream().forEach(
+					entity -> entity.addQuestionnaireEntity(this));
+		}
+	}
+	
+	/**
+	 * Update existing {@link QuestionnaireEntity} object in database
+	 * Field published should be update separately
+	 */
+	public void updateQuestionnaireEntity(QuestionnaireEntity entity) {
+		Comparator<QuestionEntity> comparator = new Comparator<QuestionEntity>() {
+			@Override
+			public int compare(QuestionEntity o1, QuestionEntity o2) {
+				long questionId1 = o1.getId();
+				long questionId2 = o2.getId();
+				return (int) (questionId1 - questionId2);
+			}
+		};
+		if (entity.getDescription() != this.getDescription()
+				&& entity.getDescription() != null) {
+			this.setDescription(entity.getDescription());
+		}
+		if (entity.getName() != this.getName() && entity.getName() != null) {
+			this.setName(entity.getName());
+		}
+		if (entity.getModifiedBy() != null) {
+			this.setModifiedBy(entity.getModifiedBy());
+		}
+		if (this.questionEntities != null && entity.questionEntities != null) {
+			this.questionEntities.sort(comparator);
+			entity.questionEntities.sort(comparator);
+			if (this.questionEntities.size() != entity.questionEntities.size()) {
+				throw new RuntimeException(
+						"Target Answer Entities size is not equals to Source Answer Entities");
+			} else {
+				for (int i = 0; i < this.questionEntities.size(); i++) {
+					if (entity.questionEntities.get(i).getId() == this.questionEntities
+							.get(i).getId()) {
+						this.questionEntities.get(i).updateQuestionEntity(
+								entity.questionEntities.get(i));
+					}
+				}
+			}
+		}
+	}
 
 	@Override
 	public String toString() {
 		return "QuestionnaireEntity [getName()=" + getName()
 				+ ", getDescription()=" + getDescription() + ", isPublished()="
-				+ isPublished() + ", getId()=" + getId() + ", getCreatedBy()="
-				+ getCreatedBy() == null ? "null" : getCreatedBy().toString()
-				+ ", getModifiedBy()=" + getModifiedBy() == null ? "null"
-				: getModifiedBy().toString() + ", getCreatedDate()="
-						+ getCreatedDate() + ", getModifiedDate()="
-						+ getModifiedDate() + "]";
+				+ isPublished() + ", getId()=" + getId()
+				+ ", getCreatedDate()=" + getCreatedDate()
+				+ ", getModifiedDate()=" + getModifiedDate() + "]";
 	}
 
 }

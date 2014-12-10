@@ -92,15 +92,9 @@ public class PersonAnswerEntity extends BaseEntity implements
 
 	@Override
 	public String toString() {
-		return "PersonAnswerEntity [getAnswerEntity()=" + getAnswerEntity() == null ? "null"
-				: getAnswerEntity().toString() + ", getPersonAnswer()="
-						+ getPersonAnswer() + ", isMarked()=" + isMarked()
-						+ ", getPersonQuestionEntity()="
-						+ getPersonQuestionEntity() == null ? "null"
-						: getPersonQuestionEntity().toString() + ", getId()="
-								+ getId() + ", getCreatedDate()="
-								+ getCreatedDate() + ", getModifiedDate()="
-								+ getModifiedDate() + "]";
+		return "PersonAnswerEntity [ getId()=" + getId()
+				+ ", getCreatedDate()=" + getCreatedDate()
+				+ ", getModifiedDate()=" + getModifiedDate() + "]";
 	}
 
 }

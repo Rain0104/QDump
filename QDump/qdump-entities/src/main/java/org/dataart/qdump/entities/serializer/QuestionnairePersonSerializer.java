@@ -9,7 +9,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-public class QuestionnairePersonSerializer extends JsonSerializer<QuestionnaireEntity>{
+public class QuestionnairePersonSerializer extends
+		JsonSerializer<QuestionnaireEntity> {
 
 	@Override
 	public void serialize(QuestionnaireEntity value, JsonGenerator jgen,
@@ -21,5 +22,5 @@ public class QuestionnairePersonSerializer extends JsonSerializer<QuestionnaireE
 		jgen.writeStringField("description", value.getDescription());
 		jgen.writeEndObject();
 	}
-	
+
 }

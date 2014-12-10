@@ -3,6 +3,21 @@ package org.dataart.qdump.entities.person;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+
 import org.dataart.qdump.entities.questionnaire.AnswerEntity;
 import org.dataart.qdump.entities.questionnaire.BaseEntity;
 import org.dataart.qdump.entities.questionnaire.QuestionEntity;
@@ -15,30 +30,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 @Entity
 @Table(name = "person_questions")
 @AttributeOverride(name = "id", column = @Column(name = "id_person_question", insertable = false, updatable = false))
 @JsonAutoDetect
 @JsonIgnoreProperties({"createdDate", "modifiedDate"})
 @NamedQueries({
-	@NamedQuery(name = "PersonQuestionEntity.getCorrectQuestion", query = "FROM PersonQuestionEntity pq "
-			+ "WHERE pq.isCorrect = ?1"),
-	@NamedQuery(name = "PersonQuestionEntity.getQuestionByPersonQuestionnaireId", query = "FROM PersonQuestionEntity pq "
-			+ "WHERE pq.personQuestionnaireEntity.id = ?1")	
-	 })
+		@NamedQuery(name = "PersonQuestionEntity.getCorrectQuestion", query = "FROM PersonQuestionEntity pq "
+				+ "WHERE pq.correct = ?1"),
+				@NamedQuery(name = "PersonQuestionEntity.getQuestionByPersonQuestionnaireId", query = "FROM PersonQuestionEntity pq "
+						+ "WHERE pq.personQuestionnaireEntity.id = ?1") })
 public class PersonQuestionEntity extends BaseEntity implements
 		Serializable {
 	private static final long serialVersionUID = -6691017410211190245L;
@@ -48,11 +49,11 @@ public class PersonQuestionEntity extends BaseEntity implements
 	@JsonSerialize(using = QuestionPersonSerializer.class)
 	private QuestionEntity questionEntity;
 	@JsonProperty("correct")
-	private boolean isCorrect;
+	private boolean correct;
 	@JsonProperty("person_answers")
 	private List<PersonAnswerEntity> personAnswerEntities;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = PersonQuestionnaireEntity.class)
 	@JoinColumn(name = "id_person_questionnaire", referencedColumnName = "id_person_questionnaire")
 	public PersonQuestionnaireEntity getPersonQuestionnaireEntity() {
 		return personQuestionnaireEntity;
@@ -75,11 +76,11 @@ public class PersonQuestionEntity extends BaseEntity implements
 
 	@Column(name = "correct", columnDefinition = "BIT(1) DEFAULT 0")
 	public boolean isCorrect() {
-		return isCorrect;
+		return correct;
 	}
 
 	public void setCorrect(boolean isCorrect) {
-		this.isCorrect = isCorrect;
+		this.correct = isCorrect;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "personQuestionEntity", orphanRemoval = true)
@@ -99,7 +100,7 @@ public class PersonQuestionEntity extends BaseEntity implements
 	 * @return
 	 */
 	public void checkQuestionIsCorrect() {
-		isCorrect = checkPersonAnswersIsCorrect();
+		correct = checkPersonAnswersIsCorrect();
 	}
 
 	/**
@@ -140,18 +141,23 @@ public class PersonQuestionEntity extends BaseEntity implements
 			personAnswerEntity.setPersonQuestionEntity(this);
 		}
 	}
+	
+	@PrePersist
+	@PreUpdate
+	public void updatePersonAnswerEntities() {
+		if (personAnswerEntities != null) {
+			personAnswerEntities.stream().forEach(
+					entity -> entity.addPersonQuestionEntity(this));
+		}
+	}
 
 	@Override
 	public String toString() {
-		return "PersonQuestionEntity [getPersonQuestionnaireEntity()="
-				+ getPersonQuestionnaireEntity() == null ? "null"
-				: getPersonQuestionnaireEntity().toString()
-						+ ", getQuestionEntity()=" + getQuestionEntity() == null ? "null"
-						: getQuestionEntity().toString() + ", isCorrect()="
-								+ isCorrect() + ", getId()=" + getId()
-								+ ", getCreatedDate()=" + getCreatedDate()
-								+ ", getModifiedDate()=" + getModifiedDate()
-								+ "]";
+		return "PersonQuestionEntity [isCorrect()=" + isCorrect()
+				+ ", getId()=" + getId() + ", getCreatedDate()="
+				+ getCreatedDate() + ", getModifiedDate()=" + getModifiedDate()
+				+ "]";
 	}
 
+	
 }

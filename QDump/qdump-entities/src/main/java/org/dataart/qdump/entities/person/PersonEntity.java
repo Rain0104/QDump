@@ -2,6 +2,7 @@ package org.dataart.qdump.entities.person;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.AttributeOverride;
@@ -228,20 +229,20 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 	public void updatePersonEntity(PersonEntity personEntity) {
 		BeanWrapper trg = new BeanWrapperImpl(this);
 		BeanWrapper src = new BeanWrapperImpl(personEntity);
+		List<String> ignoredProperties = Arrays.asList("id", "createdDate",
+				"createdBy");
 		for (PropertyDescriptor descriptor : BeanUtils
 				.getPropertyDescriptors(PersonEntity.class)) {
 			String propName = descriptor.getName();
-			if (src.getPropertyValue(propName) != null
-					&& !propName.equals("enabled")) {
-				if (trg.getPropertyValue(propName) != src
-						.getPropertyValue(propName)) {
-					if (propName.equals("gender")
-							&& src.getPropertyValue(propName).equals(9)) {
-						continue;
-					} else {
-						trg.setPropertyValue(propName,
-								src.getPropertyValue(propName));
-					}
+			if (trg.getPropertyValue(propName) != src
+					.getPropertyValue(propName)
+					&& !ignoredProperties.contains(propName)) {
+				if (propName.equals("gender")
+						&& src.getPropertyValue(propName).equals(9)) {
+					continue;
+				} else {
+					trg.setPropertyValue(propName,
+							src.getPropertyValue(propName));
 				}
 			}
 		}

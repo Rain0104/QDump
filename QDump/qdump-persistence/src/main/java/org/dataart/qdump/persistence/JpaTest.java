@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 import org.dataart.qdump.entities.enums.PersonGroupEnums;
 import org.dataart.qdump.entities.enums.QuestionTypeEnums;
@@ -187,29 +188,10 @@ public class JpaTest {
 			persistCollection(questionnaireEntities2, em);
 			persistCollection(questionnaireEntities3, em);*/
 			
-			/*PersonQuestionnaireEntity pqe = mapper
-					.readValue(
-							new File(
-									"/Users/artemvlasov/Documents/QDump Json Entities/Parsed Person Questionnaire Entity.txt"),
-							PersonQuestionnaireEntity.class);
-			pqe.getPersonQuestionEntities()
-					.stream()
-					.forEach(entity -> entity.addPersonQuestionnaireEntity(pqe));
-			pqe.getPersonQuestionEntities()
-					.stream()
-					.forEach(
-							entity -> entity
-									.getPersonAnswerEntities()
-									.stream()
-									.forEach(
-											answerEntity -> answerEntity
-													.addPersonQuestionEntity(entity)));
-			em.merge(pqe);*/
-			em.persist(mapper
-					.readValue(
-							new File(
-									"/Users/artemvlasov/Documents/QDump Json Entities/JSON/Person Entity.txt"),
-							PersonEntity.class));
+			TypedQuery<AnswerEntity> query = em.createNamedQuery("AnswerEntity.getAnswerByQuestionId", AnswerEntity.class);
+			query.setParameter(1, 13l);
+			List<AnswerEntity> answerEntities = query.getResultList();
+			answerEntities.stream().forEach(entity -> System.out.println(entity.toString()));
 			em.getTransaction().commit();
 		} finally {
 			if (em.isOpen()) {

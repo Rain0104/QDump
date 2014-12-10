@@ -13,6 +13,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.dataart.qdump.entities.enums.QuestionTypeEnums;
@@ -30,13 +32,12 @@ import com.google.common.base.Preconditions;
 @AttributeOverride(name = "id", column = @Column(name = "id_person_questionnaire", insertable = false, updatable = false))
 @JsonAutoDetect
 @NamedQueries({
-	@NamedQuery(name = "PersonQuestinnaireEntity.getPersonQuestinnaireByPersonId", query = "FROM PersonQuestinnaireEntity pinq "
-			+ "WHERE pinq.ownBy = ?1"),	
-	@NamedQuery(name = "PersonQuestinnaireEntity.getPersonQuestinnaireByStatus", query = "FROM PersonQuestinnaireEntity pinq "
-			+ "WHERE pinq.status = ?1"),
-	@NamedQuery(name = "PersonQuestinnaireEntity.getPersonQuestinnaireByQuestinnaireName", query = "FROM PersonQuestinnaireEntity pinq "
-			+ "WHERE pinq.questionnaireEntity.name = ?1")
-	 })
+		@NamedQuery(name = "PersonQuestionnaireEntity.findByOwnBy", query = "FROM PersonQuestionnaireEntity pinq "
+				+ "WHERE pinq.ownBy = ?1"),
+		@NamedQuery(name = "PersonQuestionnaireEntity.getPersonQuestinnaireByStatus", query = "FROM PersonQuestionnaireEntity pinq "
+				+ "WHERE pinq.status = ?1"),
+		@NamedQuery(name = "PersonQuestionnaireEntity.getPersonQuestinnaireByQuestinnaireName", query = "FROM PersonQuestionnaireEntity pinq "
+				+ "WHERE pinq.questionnaireEntity.name = ?1") })
 public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity
 		implements Serializable {
 	private static final long serialVersionUID = 586942138808550795L;
@@ -66,7 +67,7 @@ public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity
 		this.status = status;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "personQuestionnaireEntity", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "personQuestionnaireEntity", orphanRemoval = true, targetEntity = PersonQuestionEntity.class)
 	public List<PersonQuestionEntity> getPersonQuestionEntities() {
 		return personQuestionEntities;
 	}
@@ -141,15 +142,33 @@ public class PersonQuestionnaireEntity extends PersonQuestionnaireBaseEntity
 		}
 	}
 	
+	/**
+	 * Update {@link PersonQuestionEntity} that is associated with this {@link PersonQuestionnaireEntity}. 
+	 * This update is performed before persist current object to dataBase and before update.
+	 * This update is needed for One To Many associations.
+	 */
+	@PrePersist
+	@PreUpdate
+	public void updatePersonQuestionEntities() {
+		if (personQuestionEntities != null) {
+			personQuestionEntities.stream().forEach(
+					entity -> entity.addPersonQuestionnaireEntity(this));
+		}
+	}
+	
+	/**
+	 * Update information for existing {@link PersonQuestionnaireEntity} in database.
+	 * @param entity
+	 */
+	public void updatePersonQuestionnaireEntity(PersonQuestionnaireEntity entity) {
+		
+	}
+	
 	@Override
 	public String toString() {
-		return "PersonQuestionnaireEntity [getQuestionnaireEntity()="
-				+ getQuestionnaireEntity() == null ? "null"
-				: getQuestionnaireEntity().toString() + ", getStatus()="
-						+ getStatus() + ", getId()=" + getId()
-						+ ", getOwnBy()=" + getOwnBy() == null ? "null"
-						: getOwnBy().toString() + ", getCreatedDate()="
-								+ getCreatedDate() + ", getModifiedDate()="
-								+ getModifiedDate() + "]";
+		return "PersonQuestionnaireEntity [ getStatus()=" + getStatus()
+				+ ", getId()=" + getId() + ", getCreatedDate()="
+				+ getCreatedDate() + ", getModifiedDate()=" + getModifiedDate()
+				+ "]";
 	}
 }

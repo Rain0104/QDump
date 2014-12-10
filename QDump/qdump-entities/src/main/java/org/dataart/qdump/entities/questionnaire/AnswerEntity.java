@@ -25,15 +25,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonAutoDetect
 @JsonIgnoreProperties({"createdDate", "modifiedDate"})
 @NamedQueries({
-	@NamedQuery(name = "AnswerEntity.getAnswerByQuestionId", query = "FROM AnswerEntity a "
-			+ "WHERE a.questionEntity.id = ?1"),
-	@NamedQuery(name = "QuestionEntity.getAnswerByQuestionnaireId", query = "FROM AnswerEntity a  "
-					+ "WHERE a.questionEntity.questionnaireEntity.id = ?1")		
-	 })
+		@NamedQuery(name = "AnswerEntity.getAnswerByQuestionId", query = "FROM AnswerEntity a "
+				+ "WHERE a.questionEntity.id = ?1"),
+		@NamedQuery(name = "QuestionEntity.getAnswerByQuestionnaireId", query = "FROM AnswerEntity a  "
+				+ "WHERE a.questionEntity.questionnaireEntity.id = ?1") })
 public class AnswerEntity extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = -5973094404031746982L;
 	private String answer;
-	private boolean isCorrect;
+	private boolean correct;
 	@JsonBackReference
 	private QuestionEntity questionEntity;
 
@@ -46,16 +45,16 @@ public class AnswerEntity extends BaseEntity implements Serializable{
 		this.answer = answer;
 	}
 
-	@Column(name = "is_correct", columnDefinition = "BIT(1) DEFAULT 0")
+	@Column(name = "correct", columnDefinition = "BIT(1) DEFAULT 0")
 	public boolean isCorrect() {
-		return isCorrect;
+		return correct;
 	}
 
-	public void setCorrect(boolean isCorrect) {
-		this.isCorrect = isCorrect;
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = QuestionEntity.class)
 	@JoinColumn(name = "id_question", referencedColumnName = "id_question")
 	public QuestionEntity getQuestionEntity() {
 		return questionEntity;
@@ -71,12 +70,17 @@ public class AnswerEntity extends BaseEntity implements Serializable{
 			questionEntity.getAnswerEntities().add(this);
 		}
 	}
+	
+	public void updateAnswerEntity(AnswerEntity entity) {
+		if(this.getAnswer() != entity.getAnswer() && entity.getAnswer() != null) {
+			this.setAnswer(entity.getAnswer());
+		}
+	}
 
 	@Override
 	public String toString() {
 		return "AnswerEntity [getAnswer()=" + getAnswer() + ", isCorrect()="
-				+ isCorrect() + ", getQuestionEntity()=" + getQuestionEntity() == null ? "null" : getQuestionEntity().toString()
-				+ ", getId()=" + getId() + ", getCreatedBy()="
+				+ isCorrect() + ", getId()=" + getId() + ", getCreatedBy()="
 				+ ", getCreatedDate()=" + getCreatedDate()
 				+ ", getModifiedDate()=" + getModifiedDate() + "]";
 	}

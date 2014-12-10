@@ -47,4 +47,6 @@ public abstract class BaseEntity implements Serializable {
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
+	
+	
 }

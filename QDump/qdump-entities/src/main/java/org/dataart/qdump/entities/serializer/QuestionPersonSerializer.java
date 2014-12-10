@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-public class QuestionPersonSerializer extends JsonSerializer<QuestionEntity>{
+public class QuestionPersonSerializer extends JsonSerializer<QuestionEntity> {
 
 	@Override
 	public void serialize(QuestionEntity value, JsonGenerator jgen,
