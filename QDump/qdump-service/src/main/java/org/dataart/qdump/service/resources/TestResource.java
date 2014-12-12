@@ -3,6 +3,8 @@ package org.dataart.qdump.service.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,6 +25,8 @@ import org.springframework.stereotype.Component;
 public class TestResource {
 	@Autowired
 	private ServiceQdump service;
+	@PersistenceContext(unitName = "qdump-persistence")
+	private EntityManager em;
 	
 	@GET
 	public Response getTest() {
@@ -39,23 +43,7 @@ public class TestResource {
 	@GET
 	@Path("get/person")
 	public PersonEntity getPerson() {
-		/*EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("qdump-persistence");
-		EntityManager em = emf.createEntityManager();
-		PersonEntity entity = null;
-		try {
-			em.getTransaction().begin();
-			entity = em.find(PersonEntity.class, 1l);
-			em.getTransaction().commit();
-		} finally {
-			if(em.isOpen()) {
-				em.close();
-			}
-			emf.close();
-		}
-		
-		return entity;*/
-		return service.getPersonEntity(2l);
+		return em.find(PersonEntity.class, 1l);
 	}
 	
 	@GET
