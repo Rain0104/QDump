@@ -30,6 +30,7 @@ public class AppConfig {
 	@Autowired
 	private Environment env;
 	@Autowired
+	/*@Resource(lookup = "java:jboss/jdbc/qdump")*/
 	private DataSource dataSource;
 	@Bean
 	public PlatformTransactionManager transactionManager(

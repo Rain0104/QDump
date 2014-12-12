@@ -5,9 +5,34 @@ import java.util.List;
 import org.dataart.qdump.entities.person.PersonEntity;
 import org.dataart.qdump.entities.person.PersonQuestionEntity;
 import org.dataart.qdump.entities.person.PersonQuestionnaireEntity;
-import org.dataart.qdump.service.Service;
+import org.dataart.qdump.persistence.repository.AnswerCrudRepository;
+import org.dataart.qdump.persistence.repository.PersonAnswerCrudRepository;
+import org.dataart.qdump.persistence.repository.PersonCrudRepository;
+import org.dataart.qdump.persistence.repository.PersonQuestionCrudRepository;
+import org.dataart.qdump.persistence.repository.PersonQuestionnaireCrudRepository;
+import org.dataart.qdump.persistence.repository.QuestionCrudRepository;
+import org.dataart.qdump.persistence.repository.QuestionnaireCrudRepository;
+import org.dataart.qdump.service.ServiceQdump;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class ServiceImpl implements Service{
+@Service
+public class ServiceImpl implements ServiceQdump{
+	
+	@Autowired
+	AnswerCrudRepository answerCrudRepository;
+	@Autowired
+	PersonAnswerCrudRepository personAnswerCrudRepository;
+	@Autowired
+	PersonCrudRepository personCrudRepository;
+	@Autowired
+	PersonQuestionCrudRepository personQuestionCrudRepository;
+	@Autowired
+	PersonQuestionnaireCrudRepository personQuestionnaireCrudRepository;
+	@Autowired
+	QuestionCrudRepository questionCrudRepository;
+	@Autowired
+	QuestionnaireCrudRepository questionnaireCrudRepository;
 
 	@Override
 	public void addPersonEntity(PersonEntity personEntity) {
@@ -16,7 +41,7 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public void deletePersonEntity(int id) {
+	public void deletePersonEntity(long id) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -40,9 +65,8 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public PersonEntity getPersonEntity(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public PersonEntity getPersonEntity(long id) {
+		return personCrudRepository.findOne(id);
 	}
 
 	@Override
@@ -59,7 +83,7 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public void deletePersonQuestionnaireEntity(int id) {
+	public void deletePersonQuestionnaireEntity(long id) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -77,7 +101,7 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public PersonQuestionnaireEntity getPersonQuestionnaireEntity(int id) {
+	public PersonQuestionnaireEntity getPersonQuestionnaireEntity(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -96,13 +120,13 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public void deletePersonQuestionEntity(int id) {
+	public void deletePersonQuestionEntity(long id) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deletePersonQuestionEntityByPersonQuestionnaireId(int id) {
+	public void deletePersonQuestionEntityByPersonQuestionnaireId(long id) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -114,7 +138,7 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public PersonQuestionEntity getPersonQuestionEntity(int id) {
+	public PersonQuestionEntity getPersonQuestionEntity(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

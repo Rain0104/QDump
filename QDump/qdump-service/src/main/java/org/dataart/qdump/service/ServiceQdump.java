@@ -6,30 +6,31 @@ import org.dataart.qdump.entities.person.PersonEntity;
 import org.dataart.qdump.entities.person.PersonQuestionEntity;
 import org.dataart.qdump.entities.person.PersonQuestionnaireEntity;
 
-public interface Service {
+
+public interface ServiceQdump {
 	//PersonEntity
 	void addPersonEntity(PersonEntity personEntity);
-	void deletePersonEntity(int id);
+	void deletePersonEntity(long id);
 	void deletePersonEntityByEmail(String email);
 	void deletePersonEntityByLogin(String login);
 	void deleteAllPersonEntities();
-	PersonEntity getPersonEntity(int id);
+	PersonEntity getPersonEntity(long id);
 	List<PersonEntity> getPersonEntities();
 	
 	//PersonQuestionnaireEntity
 	void addPersonQuestionnaireEntity(PersonQuestionnaireEntity personQuestionnaireEntity);
-	void deletePersonQuestionnaireEntity(int id);
+	void deletePersonQuestionnaireEntity(long id);
 	void deletePersonQuestionnaireEntityByOwnBy(String login);
 	void deleteAllPersonQuestionnaireEntities();
-	PersonQuestionnaireEntity getPersonQuestionnaireEntity(int id);
+	PersonQuestionnaireEntity getPersonQuestionnaireEntity(long id);
 	List<PersonQuestionnaireEntity> getPersonQuestionnaireEntities();
 	
 	//PersonQuestionEntity
 	void addPersonQuestionEntity(PersonQuestionEntity personQuestionEntity);
-	void deletePersonQuestionEntity(int id);
-	void deletePersonQuestionEntityByPersonQuestionnaireId(int id);
+	void deletePersonQuestionEntity(long id);
+	void deletePersonQuestionEntityByPersonQuestionnaireId(long id);
 	void deleteAllPersonQuestionEntity();
-	PersonQuestionEntity getPersonQuestionEntity(int id);
+	PersonQuestionEntity getPersonQuestionEntity(long id);
 	List<PersonQuestionEntity> getPersonQuestionEntities();
 	
 	

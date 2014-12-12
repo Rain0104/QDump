@@ -169,7 +169,7 @@ public class PersonEntity extends QuestionnaireBaseEntity implements Serializabl
 		}
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "ownBy", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "ownBy", orphanRemoval = true)
 	@JsonProperty("person_questionnaires")
 	public List<PersonQuestionnaireEntity> getPersonQuestionnaireEntities() {
 		return personQuestionnaireEntities;

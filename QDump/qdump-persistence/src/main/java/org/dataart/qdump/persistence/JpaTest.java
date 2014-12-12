@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
 
 import org.dataart.qdump.entities.enums.PersonGroupEnums;
 import org.dataart.qdump.entities.enums.QuestionTypeEnums;
@@ -37,7 +36,7 @@ public class JpaTest {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 
-			/*// PersonEntity
+			// PersonEntity
 			PersonEntity personEntity1 = createPersonEntity("first@gmail.com",
 					"login1", "password1", "surname1", "name1", true, (byte) 1);
 			PersonEntity personEntity2 = createPersonEntity("second@gmail.com",
@@ -176,22 +175,22 @@ public class JpaTest {
 			outputStream.write("\n//Person Questionnaire Entity #3\n"
 					.getBytes());
 			outputStream.flush();
-			mapper.writeValue(outputStream, personQuestionnaireEntities3.get(0));*/
+			mapper.writeValue(outputStream, personQuestionnaireEntities3.get(0));
 
 			em.getTransaction().begin();
-			/*em.persist(personEntity1);
+			em.persist(personEntity1);
 			em.persist(personEntity2);
 			persistCollection(personQuestionnaireEntities1, em);
 			persistCollection(personQuestionnaireEntities2, em);
 			persistCollection(personQuestionnaireEntities3, em);
 			persistCollection(questionnaireEntities1, em);
 			persistCollection(questionnaireEntities2, em);
-			persistCollection(questionnaireEntities3, em);*/
+			persistCollection(questionnaireEntities3, em);
 			
-			TypedQuery<AnswerEntity> query = em.createNamedQuery("AnswerEntity.getAnswerByQuestionId", AnswerEntity.class);
+			/*TypedQuery<AnswerEntity> query = em.createNamedQuery("AnswerEntity.getAnswerByQuestionId", AnswerEntity.class);
 			query.setParameter(1, 13l);
 			List<AnswerEntity> answerEntities = query.getResultList();
-			answerEntities.stream().forEach(entity -> System.out.println(entity.toString()));
+			answerEntities.stream().forEach(entity -> System.out.println(entity.toString()));*/
 			em.getTransaction().commit();
 		} finally {
 			if (em.isOpen()) {
