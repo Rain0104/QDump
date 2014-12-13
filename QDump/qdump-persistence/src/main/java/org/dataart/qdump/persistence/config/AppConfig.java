@@ -2,6 +2,7 @@ package org.dataart.qdump.persistence.config;
 
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -29,7 +30,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class AppConfig {
 	@Autowired
 	private Environment env;
-	@Autowired
+	@Resource(lookup = "java:jboss/datasource/qdump")
 	private DataSource dataSource;
 	@Bean
 	public PlatformTransactionManager transactionManager(

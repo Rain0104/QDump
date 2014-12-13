@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -24,7 +25,8 @@ import org.dataart.qdump.entities.questionnaire.QuestionnaireEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JpaTest {
-	public static void main(String[] args) throws IOException, IntrospectionException {
+	public static void main(String[] args) throws IOException, IntrospectionException, NamingException {
+		
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("qdump-persistence");
 		EntityManager em = emf.createEntityManager();

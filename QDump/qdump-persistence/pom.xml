@@ -14,11 +14,16 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	  <dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>org.data.art</groupId>
 			<artifactId>qdump-entities</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-  </dependencies>
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>ejb-api</artifactId>
+			<version>3.0</version>
+		</dependency>
+	</dependencies>
 </project>
